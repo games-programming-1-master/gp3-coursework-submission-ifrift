@@ -242,7 +242,6 @@ void Application::GameInit()
 	bone->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(0.01f, 1.0f, 0.01f)));
 	//bone->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
 	bone->GetTransform()->SetScale(glm::vec3(0.01f, 0.01f, 0.01f));
-
 	
 
 	//Object 5 Floor---------------------------------------------------------------------	
