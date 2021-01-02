@@ -149,7 +149,7 @@ void Application::GameInit()
 			theSoundMgr->add(soundList[sounds], soundsToUse[sounds], soundTypes[sounds]);
 		}
 		//play the theme on a loop
-		//theSoundMgr->getSnd("theme")->play(-1);
+		theSoundMgr->getSnd("theme")->play(-1);
 	}
 
 	//loading all resources-----------------------------------------------------------------
@@ -1048,12 +1048,12 @@ void Application::Loop()
 			case SDL_KEYDOWN:
 				switch (event.key.keysym.sym) {
 				case SDLK_a:
-					//b->GetTransform()->AddPosition(glm::vec3(1.0f, 0.f, 0.f));
-					b->GetComponent<RigidBody>()->Get()->applyCentralImpulse(btVector3(1.f, 0.f, 0.f));
+					b->GetTransform()->AddPosition(glm::vec3(1.0f, 0.f, 0.f));
+					//b->GetComponent<RigidBody>()->Get()->applyCentralImpulse(btVector3(1.f, 0.f, 0.f));
 					break;
 				case SDLK_d:
-					//b->GetTransform()->AddPosition(glm::vec3(-1.0f, 0.f, 0.f));
-					b->GetComponent<RigidBody>()->Get()->applyCentralImpulse(btVector3(-1.f, 0.f, 0.f));
+					b->GetTransform()->AddPosition(glm::vec3(-1.0f, 0.f, 0.f));
+					//b->GetComponent<RigidBody>()->Get()->applyCentralImpulse(btVector3(-1.f, 0.f, 0.f));
 					break;
 				case SDLK_s:
 					b->GetTransform()->AddPosition(glm::vec3(0.0f, 0.f, -1.f));
