@@ -12,7 +12,7 @@
 #include "cSound.h"
 #include "cSoundMgr.h"
 #include <stdlib.h> 
-#include <glut.h>
+
 
 
 Application *Application::m_application = nullptr;
