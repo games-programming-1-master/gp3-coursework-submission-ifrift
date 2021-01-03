@@ -14,6 +14,8 @@
 #include <stdlib.h> 
 #include <SDL_ttf.h>
 #include <stdio.h>
+#include <iostream>  
+#include <string>  
 
 
 Application *Application::m_application = nullptr;
@@ -96,12 +98,17 @@ void Application::Init()
 		SDL_WINDOWPOS_CENTERED, m_windowWidth, m_windowHeight,
 		SDL_WINDOW_OPENGL);
 
+	glDisable(GL_DEPTH_TEST);
 	renderTarget = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	TTF_Font* font = TTF_OpenFont("BlackPearl.ttf", 40);
 	SDL_Color color = { 144, 77, 255, 255 };
-	const char* scoreChar = (const char*)score;
-	//std::cout << scoreChar << endl;
-	SDL_Surface* textSurface = TTF_RenderText_Solid(font, "Fun Fun Fun...FUN", color);
+	//Convert int to Const Char*
+	string str = to_string(score);
+	char* cstr = new char[str.length() + 1];
+	strcpy(cstr, str.c_str());
+	std::cout << cstr << endl;
+
+	SDL_Surface* textSurface = TTF_RenderText_Solid(font, cstr, color);
 	SDL_Texture* text = SDL_CreateTextureFromSurface(renderTarget, textSurface);
 	SDL_Rect textRect;
 	textRect.x = textRect.y = 0;
@@ -110,15 +117,30 @@ void Application::Init()
 	SDL_FreeSurface(textSurface);
 	SDL_RenderCopy(renderTarget, text, NULL, &textRect);
 	SDL_RenderPresent(renderTarget);
+
+	renderTarget1 = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	TTF_Font* font1 = TTF_OpenFont("BlackPearl.ttf", 40);
+	SDL_Color color1 = { 144, 77, 255, 255 };
+	//Convert int to Const Char*
+	//string str = to_string(score);
+	//char* cstr = new char[str.length() + 1];
+	//strcpy(cstr, str.c_str());
+	//std::cout << cstr << endl;
+
+	SDL_Surface* textSurface1 = TTF_RenderText_Solid(font1, "Score = ", color1);
+	SDL_Texture* text1 = SDL_CreateTextureFromSurface(renderTarget1, textSurface1);
+	SDL_Rect textRect1;
+	textRect1.x = textRect1.y = 50;
+
+	SDL_QueryTexture(text1, NULL, NULL, &textRect1.w, &textRect1.h);
+	SDL_FreeSurface(textSurface1);
+	SDL_RenderCopy(renderTarget1, text1, NULL, &textRect1);
+	SDL_RenderPresent(renderTarget1);
 	
 	SDL_CaptureMouse(SDL_TRUE);
 
 	OpenGlInit();	
 	GameInit();
-
-	
-
-
 }
 
 void Application::OpenGlInit()

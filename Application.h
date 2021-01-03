@@ -28,9 +28,11 @@ private:
 	Camera* m_mainCamera = nullptr;
 	bool grounded = false;
 	float m_randomNumber;
-	int score = 5;
+	int score = 137;
 	int lives = 5;
-	SDL_Renderer* renderTarget = nullptr;	
+	SDL_Renderer* renderTarget = nullptr;
+	SDL_Renderer* renderTarget1 = nullptr;
+
 	
 	//Game Sounds
 	std::vector<std::string> soundList;
