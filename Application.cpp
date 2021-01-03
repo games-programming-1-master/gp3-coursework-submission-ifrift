@@ -12,7 +12,8 @@
 #include "cSound.h"
 #include "cSoundMgr.h"
 #include <stdlib.h> 
-
+#include <SDL_ttf.h>
+#include <stdio.h>
 
 
 Application *Application::m_application = nullptr;
@@ -69,11 +70,18 @@ Application::Application()
 
 void Application::Init()
 {
+	SDL_Init(SDL_INIT_VIDEO);
+	
 	//performing initialization
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
 	{
 		LOG_DEBUG(SDL_GetError());
 		exit(-1);
+	}
+	//Text Error
+	if (TTF_Init() < 0)
+	{
+		std::cout << "Error: " << TTF_GetError() << std::endl;
 	}
 
 	//setting openGL version to 4.2 
@@ -84,14 +92,33 @@ void Application::Init()
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
 	//creating window
-	m_window = SDL_CreateWindow("GP3-LAB-5", SDL_WINDOWPOS_CENTERED,
+	m_window = SDL_CreateWindow("GP3-Course-Work", SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED, m_windowWidth, m_windowHeight,
 		SDL_WINDOW_OPENGL);
 
+	renderTarget = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	TTF_Font* font = TTF_OpenFont("BlackPearl.ttf", 40);
+	SDL_Color color = { 144, 77, 255, 255 };
+	const char* scoreChar = (const char*)score;
+	//std::cout << scoreChar << endl;
+	SDL_Surface* textSurface = TTF_RenderText_Solid(font, "Fun Fun Fun...FUN", color);
+	SDL_Texture* text = SDL_CreateTextureFromSurface(renderTarget, textSurface);
+	SDL_Rect textRect;
+	textRect.x = textRect.y = 0;
+
+	SDL_QueryTexture(text, NULL, NULL, &textRect.w, &textRect.h);
+	SDL_FreeSurface(textSurface);
+	SDL_RenderCopy(renderTarget, text, NULL, &textRect);
+	SDL_RenderPresent(renderTarget);
+	
 	SDL_CaptureMouse(SDL_TRUE);
 
-	OpenGlInit();
+	OpenGlInit();	
 	GameInit();
+
+	
+
+
 }
 
 void Application::OpenGlInit()
@@ -136,6 +163,8 @@ void Application::MousePos()
 
 void Application::GameInit()
 {
+	
+
 	//Init the sound manager------------------------------------------------------------------
 	if (theSoundMgr->initMixer())
 	{
@@ -666,6 +695,8 @@ void Application::GameInit()
 		wallRight5->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
 		wallRight5->GetTransform()->SetScale(glm::vec3(1.f, 1.0f, 1.f));
 
+		
+
 		//wall 6
 		m_entities.push_back(wallRight6);
 		wallRight6->AddComponent(
@@ -822,6 +853,8 @@ void Application::GameInit()
 
 void Application::Loop()
 {
+	
+
 	m_appState = AppState::RUNNING;	
 	//std::cout << playerX << std::endl;
 	auto prevTicks = std::chrono::high_resolution_clock::now();
@@ -1031,7 +1064,7 @@ void Application::Loop()
 			grounded = false;
 		}
 		
-
+		
 		
 
 		//poll SDL events
@@ -1071,8 +1104,9 @@ void Application::Loop()
 					theSoundMgr->getSnd("theme")->pauseMusic();
 					break;
 				case SDLK_t:
-					spawnSomethingBone();
-
+					//spawnSomethingBone();
+					//Score Text
+					
 					break;
 				case SDLK_o:
 					b->AddComponent(cc);
@@ -1168,7 +1202,9 @@ void Application::Quit()
 	Physics::GetInstance()->Quit();
 	SDL_GL_DeleteContext(m_glContext);
 	SDL_DestroyWindow(m_window);
+	//SDL_DestroyTexture(text);
 	SDL_QuitSubSystem(SDL_INIT_EVERYTHING);
+	//IMG_Quit();
 	SDL_Quit();
 }
 
@@ -1185,6 +1221,7 @@ void Application::Render()
 	/* Clear context */
 	glClearColor(0.f, 0.f, 0.f, 1.f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
 
 	m_mainCamera->Recalculate();
 	for (auto& a : m_entities)

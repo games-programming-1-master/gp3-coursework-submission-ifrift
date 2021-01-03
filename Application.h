@@ -1,7 +1,7 @@
 #pragma once
 #include "Entity.h"
 #include <string>
-#include <glut.h>
+#include <SDL_ttf.h>
 
 class Camera;
 
@@ -28,8 +28,9 @@ private:
 	Camera* m_mainCamera = nullptr;
 	bool grounded = false;
 	float m_randomNumber;
-	int score = 0;
+	int score = 5;
 	int lives = 5;
+	SDL_Renderer* renderTarget = nullptr;	
 	
 	//Game Sounds
 	std::vector<std::string> soundList;
@@ -60,6 +61,6 @@ public:
 	
 	inline Camera* GetCamera() { return m_mainCamera; }
 	void SetCamera(Camera* camera);
-	void GameInit();
+	void GameInit();	
 };
 
