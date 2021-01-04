@@ -32,6 +32,8 @@ private:
 	int lives = 5;
 	bool armor = false;
 	int timer;
+	bool gameActive = false;
+	bool musicOn = true;
 	SDL_Renderer* renderTarget = nullptr;
 	SDL_Renderer* renderTarget1 = nullptr;
 

@@ -207,7 +207,7 @@ void Application::GameInit()
 			theSoundMgr->add(soundList[sounds], soundsToUse[sounds], soundTypes[sounds]);
 		}
 		//play the theme on a loop
-		//theSoundMgr->getSnd("theme")->play(-1);
+		theSoundMgr->getSnd("theme")->play(-1);
 	}
 
 	//loading all resources-----------------------------------------------------------------
@@ -333,7 +333,7 @@ void Application::GameInit()
 	bone->GetTransform()->SetPosition(glm::vec3(-10.f, 10.f, 70.f));
 	bone->AddComponent<RigidBody>();
 	bone->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(0.01f, 1.0f, 0.01f)));
-	//bone->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
+	bone->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
 	bone->GetTransform()->SetScale(glm::vec3(0.01f, 0.01f, 0.01f));
 
 	//Bone 2
@@ -349,7 +349,7 @@ void Application::GameInit()
 	bone2->GetTransform()->SetPosition(glm::vec3(20.f, 10.f, 90.f));
 	bone2->AddComponent<RigidBody>();
 	bone2->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(0.01f, 1.0f, 0.01f)));
-	//bone2->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
+	bone2->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
 	bone2->GetTransform()->SetScale(glm::vec3(0.01f, 0.01f, 0.01f));
 
 	//Bone 3
@@ -1006,11 +1006,11 @@ void Application::Loop()
 			std::cout << "Spider Col, lives = " << lives << std::endl;
 			theSoundMgr->getSnd("whining")->play(0);
 			spawnSomethingSpider();
-			lives--; 
+			lives--;
 		}
 		//Spider and death box
 		if (Physics::GetInstance()->Collision3D(spider->GetComponent<RigidBody>()->Get(), 0, 0, deathBox->GetComponent<RigidBody>()->Get(), 1, 1) == true)
-		{			
+		{
 			spawnSomethingSpider();
 		}
 
@@ -1018,17 +1018,17 @@ void Application::Loop()
 		if (Physics::GetInstance()->Collision3D(spider->GetComponent<RigidBody>()->Get(), 0, 0, shield->GetComponent<RigidBody>()->Get(), 1, 1) == true)
 		{
 			theSoundMgr->getSnd("bounce")->play(0);
-			spider->GetComponent<RigidBody>()->Get()->applyCentralImpulse(btVector3(0.f, 20.f, 0.f));			
+			spider->GetComponent<RigidBody>()->Get()->applyCentralImpulse(btVector3(0.f, 20.f, 0.f));
 		}
-		
+
 		//Player and power up
 		if (Physics::GetInstance()->Collision3D(b->GetComponent<RigidBody>()->Get(), 0, 0, shieldCollect->GetComponent<RigidBody>()->Get(), 1, 1) == true)
 		{
 			shieldCollect->GetTransform()->SetPosition(glm::vec3(m_randomNumber, 10.f, 200.f));;
 			theSoundMgr->getSnd("armor")->play(0);
 			armor = true;
-			timer = 1000;
-			shield->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(0.f, 0.0f, 3.f));			
+			timer = 600;
+			shield->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(0.f, 0.0f, 3.f));
 		}
 
 		//Death Box and power up
@@ -1064,7 +1064,7 @@ void Application::Loop()
 		}
 		//Left wall
 		if (Physics::GetInstance()->Collision3D(wallLeft1->GetComponent<RigidBody>()->Get(), 0, 0, deathBox->GetComponent<RigidBody>()->Get(), 1, 1) == true)
-		{			
+		{
 			wallLeft1->GetTransform()->SetPosition(glm::vec3(20.f, -2.f, 150.f));
 		}
 		if (Physics::GetInstance()->Collision3D(wallLeft2->GetComponent<RigidBody>()->Get(), 0, 0, deathBox->GetComponent<RigidBody>()->Get(), 1, 1) == true)
@@ -1177,7 +1177,7 @@ void Application::Loop()
 		{
 			wallRight14->GetTransform()->SetPosition(glm::vec3(-20.f, -2.f, 150.f));
 		}
-		
+
 		if (Physics::GetInstance()->Collision3D(b->GetComponent<RigidBody>()->Get(), 0, 0, ground->GetComponent<RigidBody>()->Get(), 1, 1) == true)
 		{
 			//std::cout << "Ground Col" << std::endl;
@@ -1212,9 +1212,9 @@ void Application::Loop()
 		{
 			grounded = false;
 		}
-		
-		
-		
+
+
+
 
 		//poll SDL events
 		while (SDL_PollEvent(&event))
@@ -1255,7 +1255,7 @@ void Application::Loop()
 				case SDLK_t:
 					//spawnSomethingBone();
 					//Score Text
-					
+
 					break;
 				case SDLK_o:
 					b->AddComponent(cc);
@@ -1276,8 +1276,20 @@ void Application::Loop()
 				case SDLK_ESCAPE:
 					m_appState = AppState::QUITTING;
 					break;
-				case SDLK_r:
-					//Init();
+				case SDLK_SPACE:
+					gameActive = true;
+					break;
+				case SDLK_l:					
+					if (musicOn)
+					{
+						theSoundMgr->getSnd("theme")->pauseMusic();
+						musicOn = false;
+					}
+					else if (!musicOn)
+					{
+						theSoundMgr->getSnd("theme")->resumeMusic();
+						musicOn = true;
+					}
 					break;
 				}
 				//record when the user releases a key
@@ -1298,6 +1310,9 @@ void Application::Loop()
 		m_worldDeltaTime = deltaTime;
 		prevTicks = currentTicks;
 
+		if (gameActive)
+		{
+		
 		shield->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(0.f, 0.0f, 3.f));
 		bone->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
 		bone2->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
@@ -1340,6 +1355,7 @@ void Application::Loop()
 
 		shieldCollect->GetTransform()->AddRotation(glm::quat(1.0f, 0.f, -0.05f, 0.f));
 		shieldCollect->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
+		}
 
 		if (armor)
 		{					
