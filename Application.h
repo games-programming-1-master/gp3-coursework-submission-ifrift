@@ -30,6 +30,7 @@ private:
 	float m_randomNumber;
 	int score = 137;
 	int lives = 5;
+	bool armor = false;
 	SDL_Renderer* renderTarget = nullptr;
 	SDL_Renderer* renderTarget1 = nullptr;
 

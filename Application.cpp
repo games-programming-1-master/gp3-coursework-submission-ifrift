@@ -26,6 +26,10 @@ CameraComp* cc = new CameraComp();
 Entity* b = new Entity();
 Entity* spawn = new Entity();
 Entity* bone = new Entity();
+Entity* shield = new Entity();
+Entity* shieldCollect = new Entity();
+Entity* bone2 = new Entity();
+Entity* bone3 = new Entity();
 Entity* ground = new Entity();
 Entity* ground1 = new Entity();
 Entity* ground2 = new Entity();
@@ -33,6 +37,8 @@ Entity* ground3 = new Entity();
 Entity* ground4 = new Entity();
 Entity* ground5 = new Entity();
 Entity* spider = new Entity();
+Entity* spider2 = new Entity();
+Entity* spider3 = new Entity();
 Entity* deathBox = new Entity();
 Entity* wallLeft1 = new Entity();
 Entity* wallLeft2 = new Entity();
@@ -191,17 +197,17 @@ void Application::GameInit()
 	if (theSoundMgr->initMixer())
 	{
 		//load game sounds
-		soundList = { "theme", "click", "woof", "whining" };
-		soundTypes = { soundType::music, soundType::sfx, soundType::sfx, soundType::sfx };
+		soundList = { "theme", "click", "woof", "whining", "bounce", "armor" };
+		soundTypes = { soundType::music, soundType::sfx, soundType::sfx, soundType::sfx, soundType::sfx, soundType::sfx };
 
-		soundsToUse = { ASSET_AUDIO_PATH_Theme + "themeMusic.mp3",  ASSET_AUDIO_PATH_SFX + "ClickOn.wav", ASSET_AUDIO_PATH_SFX + "woof1.mp3", ASSET_AUDIO_PATH_SFX + "Whining.mp3" };
+		soundsToUse = { ASSET_AUDIO_PATH_Theme + "themeMusic.mp3",  ASSET_AUDIO_PATH_SFX + "ClickOn.wav", ASSET_AUDIO_PATH_SFX + "woof1.mp3", ASSET_AUDIO_PATH_SFX + "Whining.mp3", ASSET_AUDIO_PATH_SFX + "bounce.wav", ASSET_AUDIO_PATH_SFX + "Armor.wav" };
 
 		for (unsigned int sounds = 0; sounds < soundList.size(); sounds++)
 		{
 			theSoundMgr->add(soundList[sounds], soundsToUse[sounds], soundTypes[sounds]);
 		}
 		//play the theme on a loop
-		theSoundMgr->getSnd("theme")->play(-1);
+		//theSoundMgr->getSnd("theme")->play(-1);
 	}
 
 	//loading all resources-----------------------------------------------------------------
@@ -212,6 +218,7 @@ void Application::GameInit()
 	Resources::GetInstance()->AddModel("Models/bone.obj");
 	Resources::GetInstance()->AddModel("Models/bridge.obj");
 	Resources::GetInstance()->AddModel("Models/Wall.obj");
+	Resources::GetInstance()->AddModel("Models/Shield.obj");
 	Resources::GetInstance()->AddTexture("Images/Textures/Wood.jpg");
 	Resources::GetInstance()->AddTexture("Images/Textures/fur.jpg");
 	Resources::GetInstance()->AddTexture("Images/Textures/bone.jpg");
@@ -220,6 +227,8 @@ void Application::GameInit()
 	Resources::GetInstance()->AddTexture("Images/Textures/redBlack.jfif");
 	Resources::GetInstance()->AddTexture("Images/Textures/wall.jpg");
 	Resources::GetInstance()->AddTexture("Images/Textures/wall2.bmp");
+	Resources::GetInstance()->AddTexture("Images/Textures/steel.jpg");
+
 
 
 
@@ -278,8 +287,40 @@ void Application::GameInit()
 		c->GetTransform()->SetScale(glm::vec3(0.001f, 0.001f, 0.001f));
 	}*/
 
+	//Object Shield
+	m_entities.push_back(shield);
+	shield->AddComponent(
+		new MeshRenderer(
+			Resources::GetInstance()->GetModel("Models/Shield.obj"),
+			Resources::GetInstance()->GetShader("simple"),
+			Resources::GetInstance()->GetTexture("Images/Textures/steel.jpg"))
+		);
+	MeshRenderer* m_shield = shield->GetComponent<MeshRenderer>();
+
+	shield->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(0.f, 0.0f, 3.f));
+	shield->AddComponent<RigidBody>();
+	shield->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(0.8f, 0.1f, 0.2f)));
+	shield->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
+	shield->GetTransform()->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
+
+	//Object power up
+	m_entities.push_back(shieldCollect);
+	shieldCollect->AddComponent(
+		new MeshRenderer(
+			Resources::GetInstance()->GetModel("Models/Shield.obj"),
+			Resources::GetInstance()->GetShader("simple"),
+			Resources::GetInstance()->GetTexture("Images/Textures/steel.jpg"))
+	);
+	MeshRenderer* m_shieldCollect = shieldCollect->GetComponent<MeshRenderer>();
+
+	shieldCollect->GetTransform()->SetPosition(glm::vec3(5.f, 10.0f, 30.f));
+	shieldCollect->AddComponent<RigidBody>();
+	shieldCollect->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(0.8f, 0.1f, 0.2f)));
+	shieldCollect->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
+	shieldCollect->GetTransform()->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
+
 	//Object 4 Bone---------------------------------------------------------------------
-	
+	//Bone 1
 	m_entities.push_back(bone);
 	bone->AddComponent(
 		new MeshRenderer(
@@ -288,12 +329,44 @@ void Application::GameInit()
 			Resources::GetInstance()->GetTexture("Images/Textures/bone.jpg"))
 	);
 	MeshRenderer* m_bone = bone->GetComponent<MeshRenderer>();
-
-	bone->GetTransform()->SetPosition(glm::vec3(0.f, 10.f, 50.f));
+	
+	bone->GetTransform()->SetPosition(glm::vec3(-10.f, 10.f, 70.f));
 	bone->AddComponent<RigidBody>();
 	bone->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(0.01f, 1.0f, 0.01f)));
 	//bone->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
 	bone->GetTransform()->SetScale(glm::vec3(0.01f, 0.01f, 0.01f));
+
+	//Bone 2
+	m_entities.push_back(bone2);
+	bone2->AddComponent(
+		new MeshRenderer(
+			Resources::GetInstance()->GetModel("Models/bone.obj"),
+			Resources::GetInstance()->GetShader("simple"),
+			Resources::GetInstance()->GetTexture("Images/Textures/bone.jpg"))
+	);
+	MeshRenderer* m_bone2 = bone2->GetComponent<MeshRenderer>();
+
+	bone2->GetTransform()->SetPosition(glm::vec3(20.f, 10.f, 90.f));
+	bone2->AddComponent<RigidBody>();
+	bone2->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(0.01f, 1.0f, 0.01f)));
+	//bone2->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
+	bone2->GetTransform()->SetScale(glm::vec3(0.01f, 0.01f, 0.01f));
+
+	//Bone 3
+	m_entities.push_back(bone3);
+	bone3->AddComponent(
+		new MeshRenderer(
+			Resources::GetInstance()->GetModel("Models/bone.obj"),
+			Resources::GetInstance()->GetShader("simple"),
+			Resources::GetInstance()->GetTexture("Images/Textures/bone.jpg"))
+	);
+	MeshRenderer* m_bone3 = bone3->GetComponent<MeshRenderer>();
+
+	bone3->GetTransform()->SetPosition(glm::vec3(0.f, 10.f, 50.f));
+	bone3->AddComponent<RigidBody>();
+	bone3->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(0.01f, 1.0f, 0.01f)));
+	//bone3->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
+	bone3->GetTransform()->SetScale(glm::vec3(0.01f, 0.01f, 0.01f));
 	
 
 	//Object 5 Floor---------------------------------------------------------------------	
@@ -889,8 +962,43 @@ void Application::Loop()
 		{
 			std::cout << "Bone Col, score = " << score << std::endl;
 			theSoundMgr->getSnd("woof")->play(0);
-			spawnSomethingBone();		
+			CreateRandomNumber();
+			bone->GetTransform()->SetPosition(glm::vec3(m_randomNumber, 10.f, 70.f));;
 			score++;
+		}
+		//Player and bone
+		if (Physics::GetInstance()->Collision3D(b->GetComponent<RigidBody>()->Get(), 0, 0, bone2->GetComponent<RigidBody>()->Get(), 1, 1) == true)
+		{
+			std::cout << "Bone Col, score = " << score << std::endl;
+			theSoundMgr->getSnd("woof")->play(0);
+			CreateRandomNumber();
+			bone2->GetTransform()->SetPosition(glm::vec3(m_randomNumber, 10.f, 70.f));
+			score++;
+		}
+		//Player and bone
+		if (Physics::GetInstance()->Collision3D(b->GetComponent<RigidBody>()->Get(), 0, 0, bone3->GetComponent<RigidBody>()->Get(), 1, 1) == true)
+		{
+			std::cout << "Bone Col, score = " << score << std::endl;
+			theSoundMgr->getSnd("woof")->play(0);
+			CreateRandomNumber();
+			bone3->GetTransform()->SetPosition(glm::vec3(m_randomNumber, 10.f, 70.f));
+			score++;
+		}
+		//Bone and death box
+		if (Physics::GetInstance()->Collision3D(bone->GetComponent<RigidBody>()->Get(), 0, 0, deathBox->GetComponent<RigidBody>()->Get(), 1, 1) == true)
+		{
+			CreateRandomNumber();
+			bone->GetTransform()->SetPosition(glm::vec3(m_randomNumber, 10.f, 70.f));;
+		}
+		if (Physics::GetInstance()->Collision3D(bone2->GetComponent<RigidBody>()->Get(), 0, 0, deathBox->GetComponent<RigidBody>()->Get(), 1, 1) == true)
+		{
+			CreateRandomNumber();
+			bone2->GetTransform()->SetPosition(glm::vec3(m_randomNumber, 10.f, 70.f));;
+		}
+		if (Physics::GetInstance()->Collision3D(bone3->GetComponent<RigidBody>()->Get(), 0, 0, deathBox->GetComponent<RigidBody>()->Get(), 1, 1) == true)
+		{
+			CreateRandomNumber();
+			bone3->GetTransform()->SetPosition(glm::vec3(m_randomNumber, 10.f, 70.f));;
 		}
 		//Player and spider
 		if (Physics::GetInstance()->Collision3D(b->GetComponent<RigidBody>()->Get(), 0, 0, spider->GetComponent<RigidBody>()->Get(), 1, 1) == true)
@@ -905,11 +1013,29 @@ void Application::Loop()
 		{			
 			spawnSomethingSpider();
 		}
-		//Bone and death box
-		if (Physics::GetInstance()->Collision3D(bone->GetComponent<RigidBody>()->Get(), 0, 0, deathBox->GetComponent<RigidBody>()->Get(), 1, 1) == true)
+
+		//Spider and shield box
+		if (Physics::GetInstance()->Collision3D(spider->GetComponent<RigidBody>()->Get(), 0, 0, shield->GetComponent<RigidBody>()->Get(), 1, 1) == true)
 		{
-			spawnSomethingBone();
+			theSoundMgr->getSnd("bounce")->play(0);
+			spider->GetComponent<RigidBody>()->Get()->applyCentralImpulse(btVector3(0.f, 20.f, 0.f));			
 		}
+		
+		//Player and power up
+		if (Physics::GetInstance()->Collision3D(b->GetComponent<RigidBody>()->Get(), 0, 0, shieldCollect->GetComponent<RigidBody>()->Get(), 1, 1) == true)
+		{
+			shieldCollect->GetTransform()->SetPosition(glm::vec3(m_randomNumber, 10.f, 200.f));;
+			theSoundMgr->getSnd("armor")->play(0);
+			armor = true;
+			shield->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(0.f, 0.0f, 3.f));			
+		}
+
+		//Death Box and power up
+		if (Physics::GetInstance()->Collision3D(deathBox->GetComponent<RigidBody>()->Get(), 0, 0, shieldCollect->GetComponent<RigidBody>()->Get(), 1, 1) == true)
+		{
+			shieldCollect->GetTransform()->SetPosition(glm::vec3(m_randomNumber, 10.f, 200.f));;
+		}
+
 		//Ground and Death Box
 		if (Physics::GetInstance()->Collision3D(ground->GetComponent<RigidBody>()->Get(), 0, 0, deathBox->GetComponent<RigidBody>()->Get(), 1, 1) == true)
 		{
@@ -1171,7 +1297,10 @@ void Application::Loop()
 		m_worldDeltaTime = deltaTime;
 		prevTicks = currentTicks;
 
+		shield->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(0.f, 0.0f, 3.f));
 		bone->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
+		bone2->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
+		bone3->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
 		spider->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
 		ground->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
 		ground1->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
@@ -1208,6 +1337,23 @@ void Application::Loop()
 		wallRight13->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
 		wallRight14->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
 
+		shieldCollect->GetTransform()->AddRotation(glm::quat(1.0f, 0.f, -0.05f, 0.f));
+		shieldCollect->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
+		if (armor)
+		{
+			//shield->GetTransform()->SetPosition(glm::vec3(0.f, -200.f, 0.f));
+			int timer = 100;
+			timer--;
+			if (timer < 0)
+			{
+				armor = false;
+			}
+
+		}
+		if (!armor)
+		{
+			shield->GetTransform()->SetPosition(glm::vec3(0.f, -200.f, 0.f));
+		}
 
 		Physics::GetInstance()->Update(deltaTime);
 		//update and render all entities
