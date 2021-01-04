@@ -31,6 +31,7 @@ private:
 	int score = 137;
 	int lives = 5;
 	bool armor = false;
+	int timer;
 	SDL_Renderer* renderTarget = nullptr;
 	SDL_Renderer* renderTarget1 = nullptr;
 

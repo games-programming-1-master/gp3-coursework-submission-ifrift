@@ -1027,6 +1027,7 @@ void Application::Loop()
 			shieldCollect->GetTransform()->SetPosition(glm::vec3(m_randomNumber, 10.f, 200.f));;
 			theSoundMgr->getSnd("armor")->play(0);
 			armor = true;
+			timer = 1000;
 			shield->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(0.f, 0.0f, 3.f));			
 		}
 
@@ -1339,16 +1340,14 @@ void Application::Loop()
 
 		shieldCollect->GetTransform()->AddRotation(glm::quat(1.0f, 0.f, -0.05f, 0.f));
 		shieldCollect->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
+
 		if (armor)
-		{
-			//shield->GetTransform()->SetPosition(glm::vec3(0.f, -200.f, 0.f));
-			int timer = 100;
+		{					
 			timer--;
 			if (timer < 0)
 			{
 				armor = false;
 			}
-
 		}
 		if (!armor)
 		{
