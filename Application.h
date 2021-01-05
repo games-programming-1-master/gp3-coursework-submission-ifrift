@@ -28,12 +28,13 @@ private:
 	Camera* m_mainCamera = nullptr;
 	bool grounded = false;
 	float m_randomNumber;
-	int score = 137;
-	int lives = 5;
+	int score = 0;
+	int lives = 10;
 	bool armor = false;
 	int timer;
 	bool gameActive = false;
 	bool musicOn = true;
+	bool gameOver = false;
 	SDL_Renderer* renderTarget = nullptr;
 	SDL_Renderer* renderTarget1 = nullptr;
 

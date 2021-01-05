@@ -27,6 +27,8 @@ Entity* b = new Entity();
 Entity* spawn = new Entity();
 Entity* bone = new Entity();
 Entity* shield = new Entity();
+Entity* shield2 = new Entity();
+Entity* shield3 = new Entity();
 Entity* shieldCollect = new Entity();
 Entity* bone2 = new Entity();
 Entity* bone3 = new Entity();
@@ -106,7 +108,7 @@ void Application::Init()
 
 	glDisable(GL_DEPTH_TEST);
 	renderTarget = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-	TTF_Font* font = TTF_OpenFont("BlackPearl.ttf", 40);
+	TTF_Font* font = TTF_OpenFont("BlackPearl.ttf", 50);
 	SDL_Color color = { 144, 77, 255, 255 };
 	//Convert int to Const Char*
 	string str = to_string(score);
@@ -124,7 +126,7 @@ void Application::Init()
 	SDL_RenderCopy(renderTarget, text, NULL, &textRect);
 	SDL_RenderPresent(renderTarget);
 
-	renderTarget1 = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	/*renderTarget1 = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	TTF_Font* font1 = TTF_OpenFont("BlackPearl.ttf", 40);
 	SDL_Color color1 = { 144, 77, 255, 255 };
 	//Convert int to Const Char*
@@ -141,7 +143,7 @@ void Application::Init()
 	SDL_QueryTexture(text1, NULL, NULL, &textRect1.w, &textRect1.h);
 	SDL_FreeSurface(textSurface1);
 	SDL_RenderCopy(renderTarget1, text1, NULL, &textRect1);
-	SDL_RenderPresent(renderTarget1);
+	SDL_RenderPresent(renderTarget1);*/
 	
 	SDL_CaptureMouse(SDL_TRUE);
 
@@ -229,11 +231,12 @@ void Application::GameInit()
 	Resources::GetInstance()->AddTexture("Images/Textures/wall2.bmp");
 	Resources::GetInstance()->AddTexture("Images/Textures/steel.jpg");
 
+		/*Resources::GetInstance()->AddShader(std::make_shared<ShaderProgram>(ASSET_PATH + "Shaders/Phong.frag", 
+		ASSET_PATH + "Shaders/Phong.vert"), 
+		"simple"*/
 
-
-
-		Resources::GetInstance()->AddShader(std::make_shared<ShaderProgram>(ASSET_PATH + "Shaders/simple_VERT.glsl", 
-		ASSET_PATH + "Shaders/simple_FRAG.glsl"), 
+		Resources::GetInstance()->AddShader(std::make_shared<ShaderProgram>(ASSET_PATH + "Shaders/basic_VERT.glsl",
+		ASSET_PATH + "Shaders/basic_FRAG.glsl"),
 		"simple"
 	);
 	
@@ -288,6 +291,7 @@ void Application::GameInit()
 	}*/
 
 	//Object Shield
+	//1
 	m_entities.push_back(shield);
 	shield->AddComponent(
 		new MeshRenderer(
@@ -299,9 +303,42 @@ void Application::GameInit()
 
 	shield->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(0.f, 0.0f, 3.f));
 	shield->AddComponent<RigidBody>();
-	shield->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(0.8f, 0.1f, 0.2f)));
+	shield->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(2.f, 0.1f, 0.2f)));
 	shield->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
 	shield->GetTransform()->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
+	/*
+	m_entities.push_back(shield2);
+	shield2->AddComponent(
+		new MeshRenderer(
+			Resources::GetInstance()->GetModel("Models/Shield.obj"),
+			Resources::GetInstance()->GetShader("simple"),
+			Resources::GetInstance()->GetTexture("Images/Textures/steel.jpg"))
+	);
+	MeshRenderer* m_shield2 = shield2->GetComponent<MeshRenderer>();
+
+	shield2->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(-5.f, 0.0f, 0.f));
+	shield2->GetTransform()->SetRotation(glm::quat(1.f, 0.f, -1.f, 0.f));
+	shield2->AddComponent<RigidBody>();
+	shield2->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(0.8f, 0.1f, 0.2f)));
+	shield2->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
+	shield2->GetTransform()->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
+	//3
+	m_entities.push_back(shield3);
+	shield3->AddComponent(
+		new MeshRenderer(
+			Resources::GetInstance()->GetModel("Models/Shield.obj"),
+			Resources::GetInstance()->GetShader("simple"),
+			Resources::GetInstance()->GetTexture("Images/Textures/steel.jpg"))
+	);
+	MeshRenderer* m_shield3 = shield3->GetComponent<MeshRenderer>();
+
+	shield3->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(5.f, 0.0f, 0.f));
+	shield3->GetTransform()->SetRotation(glm::quat(1.f, 0.f, 1.f, 0.f));
+	shield3->AddComponent<RigidBody>();
+	shield3->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(0.8f, 0.1f, 0.2f)));
+	shield3->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
+	shield3->GetTransform()->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));*/
+
 
 	//Object power up
 	m_entities.push_back(shieldCollect);
@@ -470,7 +507,7 @@ void Application::GameInit()
 			Resources::GetInstance()->GetTexture("Images/Textures/redBlack.jfif"))
 	);
 	MeshRenderer* m_spider = spider->GetComponent<MeshRenderer>();
-	spider->GetTransform()->SetPosition(glm::vec3(10.f, 20.f, 30.f));
+	spider->GetTransform()->SetPosition(glm::vec3(8.f, 20.f, 30.f));
 	spider->GetTransform()->SetRotation(glm::quat(1.f, 0.f, -1.f, 0.f));
 	spider->AddComponent<RigidBody>();
 	spider->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(2.f, 1.f, 2.f)));
@@ -1014,7 +1051,7 @@ void Application::Loop()
 			spawnSomethingSpider();
 		}
 
-		//Spider and shield box
+		//Spider and shield
 		if (Physics::GetInstance()->Collision3D(spider->GetComponent<RigidBody>()->Get(), 0, 0, shield->GetComponent<RigidBody>()->Get(), 1, 1) == true)
 		{
 			theSoundMgr->getSnd("bounce")->play(0);
@@ -1028,7 +1065,9 @@ void Application::Loop()
 			theSoundMgr->getSnd("armor")->play(0);
 			armor = true;
 			timer = 600;
-			shield->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(0.f, 0.0f, 3.f));
+			shield->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(0.f, 0.0f, 3.f));	
+			shield2->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(1.f, 0.f, 0.f));
+			shield3->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(-1.f, 0.f, 0.f));
 		}
 
 		//Death Box and power up
@@ -1314,6 +1353,8 @@ void Application::Loop()
 		{
 		
 		shield->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(0.f, 0.0f, 3.f));
+		shield2->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(-2.f, 0.0f, 0.f));
+		shield3->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(2.f, 0.0f, 0.f));
 		bone->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
 		bone2->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
 		bone3->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
@@ -1363,11 +1404,18 @@ void Application::Loop()
 			if (timer < 0)
 			{
 				armor = false;
-			}
+			}					
 		}
 		if (!armor)
 		{
 			shield->GetTransform()->SetPosition(glm::vec3(0.f, -200.f, 0.f));
+			shield2->GetTransform()->SetPosition(glm::vec3(0.f, -200.f, 0.f));
+			shield3->GetTransform()->SetPosition(glm::vec3(0.f, -200.f, 0.f));
+		}
+
+		if (lives <= 0)
+		{
+			gameOver = true;
 		}
 
 		Physics::GetInstance()->Update(deltaTime);
@@ -1458,6 +1506,6 @@ void Application::spawnSomethingBone()
 void Application::spawnSomethingSpider()
 {
 	CreateRandomNumber();
-	spider->GetTransform()->SetPosition(glm::vec3(m_randomNumber, 10.f, 50.f));
+	spider->GetTransform()->SetPosition(glm::vec3(m_randomNumber, 10.f, 70.f));
+	spider->GetTransform()->SetRotation(glm::quat(1.f, 0.f, -1.f, 0.f));
 }
-
