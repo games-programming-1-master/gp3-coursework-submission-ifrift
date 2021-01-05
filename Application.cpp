@@ -114,7 +114,7 @@ void Application::Init()
 	SDL_Color color = { 144, 77, 255, 255 };
 
 	//Convert int to Const Char*
-	string str = to_string(score);
+	string str = "Score = " + to_string(score) + " & lives = " + to_string(lives) + " A = Left, D = Right";
 	char* cstr = new char[str.length() + 1];
 	strcpy(cstr, str.c_str());
 	std::cout << cstr << endl;
