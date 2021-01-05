@@ -22,7 +22,7 @@ Application *Application::m_application = nullptr;
 static cSoundMgr* theSoundMgr = cSoundMgr::getInstance();
 CameraComp* cc = new CameraComp();
 //cSound* theSound = cSound::pauseMusic();
-
+const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
 //Declaring Objects
 Entity* b = new Entity();
 Entity* spawn = new Entity();
@@ -1263,6 +1263,7 @@ void Application::Loop()
 		//poll SDL events
 		while (SDL_PollEvent(&event))
 		{
+			
 			switch (event.type)
 			{
 			case SDL_QUIT:
@@ -1274,11 +1275,11 @@ void Application::Loop()
 			case SDL_KEYDOWN:
 				switch (event.key.keysym.sym) {
 				case SDLK_a:
-					b->GetTransform()->AddPosition(glm::vec3(1.0f, 0.f, 0.f));
+					//b->GetTransform()->AddPosition(glm::vec3(1.0f, 0.f, 0.f));
 					//b->GetComponent<RigidBody>()->Get()->applyCentralImpulse(btVector3(1.f, 0.f, 0.f));
 					break;
 				case SDLK_d:
-					b->GetTransform()->AddPosition(glm::vec3(-1.0f, 0.f, 0.f));
+					//b->GetTransform()->AddPosition(glm::vec3(-1.0f, 0.f, 0.f));
 					//b->GetComponent<RigidBody>()->Get()->applyCentralImpulse(btVector3(-1.f, 0.f, 0.f));
 					break;
 				case SDLK_s:
@@ -1346,6 +1347,15 @@ void Application::Loop()
 				}*/
 				break;
 			}
+		}
+
+		if (currentKeyStates[SDL_SCANCODE_D])
+		{
+			b->GetTransform()->AddPosition(glm::vec3(-0.3f, 0.f, 0.f));
+		}
+		if 	(currentKeyStates[SDL_SCANCODE_A])
+		{
+			b->GetTransform()->AddPosition(glm::vec3(0.3f, 0.f, 0.f));
 		}
 
 		auto currentTicks = std::chrono::high_resolution_clock::now();
