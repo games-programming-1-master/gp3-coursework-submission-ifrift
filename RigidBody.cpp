@@ -26,9 +26,6 @@ void RigidBody::Init(CollisionShape* shape, float mass, const glm::vec3 localIne
 	m_rigidBody->setFriction(1);
 }
 
-
-//TODO: Get the transform from the rigidbody's motionstate and apply it to the game objects transform
-
 void RigidBody::UpdateParent()
 {
 	Transform* trans = m_entity->GetTransform();

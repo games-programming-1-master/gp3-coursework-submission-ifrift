@@ -23,6 +23,7 @@ static cSoundMgr* theSoundMgr = cSoundMgr::getInstance();
 CameraComp* cc = new CameraComp();
 //cSound* theSound = cSound::pauseMusic();
 
+//Declaring Objects
 Entity* b = new Entity();
 Entity* spawn = new Entity();
 Entity* bone = new Entity();
@@ -106,10 +107,12 @@ void Application::Init()
 		SDL_WINDOWPOS_CENTERED, m_windowWidth, m_windowHeight,
 		SDL_WINDOW_OPENGL);
 
+	//Display Socre - https://www.youtube.com/watch?v=lfz_X5YgpT8
 	glDisable(GL_DEPTH_TEST);
 	renderTarget = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	TTF_Font* font = TTF_OpenFont("BlackPearl.ttf", 50);
 	SDL_Color color = { 144, 77, 255, 255 };
+
 	//Convert int to Const Char*
 	string str = to_string(score);
 	char* cstr = new char[str.length() + 1];
@@ -402,7 +405,7 @@ void Application::GameInit()
 	bone3->GetTransform()->SetPosition(glm::vec3(0.f, 10.f, 50.f));
 	bone3->AddComponent<RigidBody>();
 	bone3->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(0.01f, 1.0f, 0.01f)));
-	//bone3->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
+	bone3->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
 	bone3->GetTransform()->SetScale(glm::vec3(0.01f, 0.01f, 0.01f));
 	
 
@@ -994,7 +997,8 @@ void Application::Loop()
 
 	while (m_appState != AppState::QUITTING)
 	{
-		//Player and bone
+		//Collision---------------------------------------------------------------------
+		//Player and bone - Reset bone position and increase score
 		if (Physics::GetInstance()->Collision3D(b->GetComponent<RigidBody>()->Get(), 0, 0, bone->GetComponent<RigidBody>()->Get(), 1, 1) == true)
 		{
 			std::cout << "Bone Col, score = " << score << std::endl;
@@ -1003,7 +1007,7 @@ void Application::Loop()
 			bone->GetTransform()->SetPosition(glm::vec3(m_randomNumber, 10.f, 70.f));;
 			score++;
 		}
-		//Player and bone
+		//Player and bone2 - Reset bone position and increase score
 		if (Physics::GetInstance()->Collision3D(b->GetComponent<RigidBody>()->Get(), 0, 0, bone2->GetComponent<RigidBody>()->Get(), 1, 1) == true)
 		{
 			std::cout << "Bone Col, score = " << score << std::endl;
@@ -1012,7 +1016,7 @@ void Application::Loop()
 			bone2->GetTransform()->SetPosition(glm::vec3(m_randomNumber, 10.f, 70.f));
 			score++;
 		}
-		//Player and bone
+		//Player and bone3 - Reset bone position and increase score
 		if (Physics::GetInstance()->Collision3D(b->GetComponent<RigidBody>()->Get(), 0, 0, bone3->GetComponent<RigidBody>()->Get(), 1, 1) == true)
 		{
 			std::cout << "Bone Col, score = " << score << std::endl;
@@ -1021,7 +1025,7 @@ void Application::Loop()
 			bone3->GetTransform()->SetPosition(glm::vec3(m_randomNumber, 10.f, 70.f));
 			score++;
 		}
-		//Bone and death box
+		//Bone and death box - Reset bone position
 		if (Physics::GetInstance()->Collision3D(bone->GetComponent<RigidBody>()->Get(), 0, 0, deathBox->GetComponent<RigidBody>()->Get(), 1, 1) == true)
 		{
 			CreateRandomNumber();
@@ -1037,7 +1041,7 @@ void Application::Loop()
 			CreateRandomNumber();
 			bone3->GetTransform()->SetPosition(glm::vec3(m_randomNumber, 10.f, 70.f));;
 		}
-		//Player and spider
+		//Player and spider - Reset spider and lose a life
 		if (Physics::GetInstance()->Collision3D(b->GetComponent<RigidBody>()->Get(), 0, 0, spider->GetComponent<RigidBody>()->Get(), 1, 1) == true)
 		{
 			std::cout << "Spider Col, lives = " << lives << std::endl;
@@ -1045,20 +1049,20 @@ void Application::Loop()
 			spawnSomethingSpider();
 			lives--;
 		}
-		//Spider and death box
+		//Spider and death box - Reset Spider
 		if (Physics::GetInstance()->Collision3D(spider->GetComponent<RigidBody>()->Get(), 0, 0, deathBox->GetComponent<RigidBody>()->Get(), 1, 1) == true)
 		{
 			spawnSomethingSpider();
 		}
 
-		//Spider and shield
+		//Spider and shield - play sound and apply force to the spider on the Y-axis
 		if (Physics::GetInstance()->Collision3D(spider->GetComponent<RigidBody>()->Get(), 0, 0, shield->GetComponent<RigidBody>()->Get(), 1, 1) == true)
 		{
 			theSoundMgr->getSnd("bounce")->play(0);
 			spider->GetComponent<RigidBody>()->Get()->applyCentralImpulse(btVector3(0.f, 20.f, 0.f));
 		}
 
-		//Player and power up
+		//Player and power up - Reset the collectable position, player gains shield power up for a set time (is protected from spider that are in front of him)
 		if (Physics::GetInstance()->Collision3D(b->GetComponent<RigidBody>()->Get(), 0, 0, shieldCollect->GetComponent<RigidBody>()->Get(), 1, 1) == true)
 		{
 			shieldCollect->GetTransform()->SetPosition(glm::vec3(m_randomNumber, 10.f, 200.f));;
@@ -1070,13 +1074,13 @@ void Application::Loop()
 			shield3->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(-1.f, 0.f, 0.f));
 		}
 
-		//Death Box and power up
+		//Death Box and power up - reset power up position
 		if (Physics::GetInstance()->Collision3D(deathBox->GetComponent<RigidBody>()->Get(), 0, 0, shieldCollect->GetComponent<RigidBody>()->Get(), 1, 1) == true)
 		{
 			shieldCollect->GetTransform()->SetPosition(glm::vec3(m_randomNumber, 10.f, 200.f));;
 		}
 
-		//Ground and Death Box
+		//Ground and Death Box - Reset ground position
 		if (Physics::GetInstance()->Collision3D(ground->GetComponent<RigidBody>()->Get(), 0, 0, deathBox->GetComponent<RigidBody>()->Get(), 1, 1) == true)
 		{
 			ground->GetTransform()->SetPosition(glm::vec3(0.f, 0.f, 260.f));
@@ -1101,7 +1105,7 @@ void Application::Loop()
 		{
 			ground5->GetTransform()->SetPosition(glm::vec3(0.f, 0.f, 260.f));
 		}
-		//Left wall
+		//Left wall - Reset wall position
 		if (Physics::GetInstance()->Collision3D(wallLeft1->GetComponent<RigidBody>()->Get(), 0, 0, deathBox->GetComponent<RigidBody>()->Get(), 1, 1) == true)
 		{
 			wallLeft1->GetTransform()->SetPosition(glm::vec3(20.f, -2.f, 150.f));
@@ -1159,7 +1163,7 @@ void Application::Loop()
 			wallLeft14->GetTransform()->SetPosition(glm::vec3(20.f, -2.f, 150.f));
 		}
 
-		//Right wall
+		//Right wall - Reset wall position
 		if (Physics::GetInstance()->Collision3D(wallRight1->GetComponent<RigidBody>()->Get(), 0, 0, deathBox->GetComponent<RigidBody>()->Get(), 1, 1) == true)
 		{
 			wallRight1->GetTransform()->SetPosition(glm::vec3(-20.f, -2.f, 150.f));
@@ -1217,6 +1221,7 @@ void Application::Loop()
 			wallRight14->GetTransform()->SetPosition(glm::vec3(-20.f, -2.f, 150.f));
 		}
 
+		// If player is colliding with the ground then the player is "grounded" and able to jump
 		if (Physics::GetInstance()->Collision3D(b->GetComponent<RigidBody>()->Get(), 0, 0, ground->GetComponent<RigidBody>()->Get(), 1, 1) == true)
 		{
 			//std::cout << "Ground Col" << std::endl;
@@ -1294,7 +1299,6 @@ void Application::Loop()
 				case SDLK_t:
 					//spawnSomethingBone();
 					//Score Text
-
 					break;
 				case SDLK_o:
 					b->AddComponent(cc);
@@ -1350,8 +1354,7 @@ void Application::Loop()
 		prevTicks = currentTicks;
 
 		if (gameActive)
-		{
-		
+		{		
 		shield->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(0.f, 0.0f, 3.f));
 		shield2->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(-2.f, 0.0f, 0.f));
 		shield3->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(2.f, 0.0f, 0.f));
@@ -1396,7 +1399,7 @@ void Application::Loop()
 
 		shieldCollect->GetTransform()->AddRotation(glm::quat(1.0f, 0.f, -0.05f, 0.f));
 		shieldCollect->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
-		}
+		}		
 
 		if (armor)
 		{					

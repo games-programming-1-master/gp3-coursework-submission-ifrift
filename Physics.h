@@ -2,6 +2,7 @@
 #include <btBulletDynamicsCommon.h>
 #include "Transform.h"
 
+// Ref http://www.cs.kent.edu/~ruttan/GameEngines/lectures/Bullet_User_Manual
 class RigidBody;
 
 class Physics
