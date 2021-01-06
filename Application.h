@@ -2,8 +2,11 @@
 #include "Entity.h"
 #include <string>
 #include <SDL_ttf.h>
-
+#include "chrono"
 class Camera;
+
+//using namespace std::this_thread;
+//using namespace std::chrono;
 
 #define WINDOW_W Application::GetInstance()->GetWindowWidth()
 #define WINDOW_H Application::GetInstance()->GetWindowHeight()
@@ -30,6 +33,7 @@ private:
 	float m_randomNumber;
 	int score = 0;
 	int lives = 10;
+	int nSecs = 10;
 	bool armor = false;
 	int timer;
 	bool gameActive = false;
@@ -56,6 +60,7 @@ private:
 	void spawnSomethingBone();
 	void spawnSomethingSpider();
 	void CreateRandomNumber();
+	void Delay(int nSecs);
 
 public:
 	//public functions
@@ -69,5 +74,6 @@ public:
 	inline Camera* GetCamera() { return m_mainCamera; }
 	void SetCamera(Camera* camera);
 	void GameInit();	
+	
 };
 

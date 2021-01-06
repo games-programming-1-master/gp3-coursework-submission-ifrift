@@ -17,7 +17,6 @@
 #include <iostream>  
 #include <string>  
 
-
 Application *Application::m_application = nullptr;
 static cSoundMgr* theSoundMgr = cSoundMgr::getInstance();
 CameraComp* cc = new CameraComp();
@@ -108,27 +107,30 @@ void Application::Init()
 		SDL_WINDOW_OPENGL);
 
 	//Display Socre - https://www.youtube.com/watch?v=lfz_X5YgpT8
-	glDisable(GL_DEPTH_TEST);
+		//glDisable(GL_DEPTH_TEST);
 	renderTarget = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	TTF_Font* font = TTF_OpenFont("BlackPearl.ttf", 50);
 	SDL_Color color = { 144, 77, 255, 255 };
-
+	/*
 	//Convert int to Const Char*
-	string str = "Score = " + to_string(score) + " & lives = " + to_string(lives) + " A = Left, D = Right";
+	string str = "Score = " + to_string(score) + ", lives = " + to_string(lives) + " A = Left, D = Right";
 	char* cstr = new char[str.length() + 1];
 	strcpy(cstr, str.c_str());
 	std::cout << cstr << endl;
-
-	SDL_Surface* textSurface = TTF_RenderText_Solid(font, cstr, color);
-	SDL_Texture* text = SDL_CreateTextureFromSurface(renderTarget, textSurface);
-	SDL_Rect textRect;
+	
+	
+	SDL_Surface* textSurface = TTF_RenderText_Solid(font, cstr, color);	
+	std::cout << "mid ui" << endl;
+	SDL_Texture* text = SDL_CreateTextureFromSurface(renderTarget, textSurface);	
+	SDL_Rect textRect;	
 	textRect.x = textRect.y = 0;
-
+	
+	
 	SDL_QueryTexture(text, NULL, NULL, &textRect.w, &textRect.h);
 	SDL_FreeSurface(textSurface);
 	SDL_RenderCopy(renderTarget, text, NULL, &textRect);
-	SDL_RenderPresent(renderTarget);
-
+	SDL_RenderPresent(renderTarget);*/
+	
 	/*renderTarget1 = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	TTF_Font* font1 = TTF_OpenFont("BlackPearl.ttf", 40);
 	SDL_Color color1 = { 144, 77, 255, 255 };
@@ -151,7 +153,9 @@ void Application::Init()
 	SDL_CaptureMouse(SDL_TRUE);
 
 	OpenGlInit();	
+	std::cout << "before gameinit" << endl;
 	GameInit();
+
 }
 
 void Application::OpenGlInit()
@@ -196,7 +200,7 @@ void Application::MousePos()
 
 void Application::GameInit()
 {
-	
+	std::cout << "start of gameinit" << endl;
 
 	//Init the sound manager------------------------------------------------------------------
 	if (theSoundMgr->initMixer())
@@ -243,22 +247,7 @@ void Application::GameInit()
 		"simple"
 	);
 	
-	//Object 1 ----------------------------------------------------------------------------
-	/*Entity* a = new Entity();
-	m_entities.push_back(a);
-	a->AddComponent(
-		new MeshRenderer(
-			Resources::GetInstance()->GetModel("Models/cube.obj"),
-			Resources::GetInstance()->GetShader("simple"),
-			Resources::GetInstance()->GetTexture("Images/Textures/Wood.jpg"))
-	);
-	MeshRenderer* m = a->GetComponent<MeshRenderer>();
-	a->GetTransform()->SetPosition(glm::vec3(0, -10.f, -20.f));
-	a->AddComponent<RigidBody>();
-	a->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(100.f, 1.f, 100.f)));
-	a->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
-	a->GetTransform()->SetScale(glm::vec3(1.f, 0.01f, 1.f));*/
-
+	
 	//Object 2 Player--------------------------------------------------------------------
 	m_entities.push_back(b);
 	b->AddComponent(
@@ -272,26 +261,7 @@ void Application::GameInit()
 	b->AddComponent<RigidBody>();
 	b->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(2.f, 0.5f, 2.f)));
 	//b->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
-	b->GetTransform()->SetScale(glm::vec3(0.2f, 0.2f, 0.2f));
-
-	//Object 3--------------------------------------------------------------------------
-	/*for (int i = 0; i < 10; i++)
-	{
-		Entity* c = new Entity();
-		m_entities.push_back(c);
-		c->AddComponent(
-			new MeshRenderer(
-				Resources::GetInstance()->GetModel("Models/dalek.obj"),
-				Resources::GetInstance()->GetShader("simple"),
-				Resources::GetInstance()->GetTexture("Images/Textures/Wood.jpg"))
-		);
-		MeshRenderer* o = c->GetComponent<MeshRenderer>();
-		c->GetTransform()->SetPosition(glm::vec3(-5.f, 5.f * i, -20.f));
-		c->AddComponent<RigidBody>();
-		c->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(1.f, 1.f, 1.f)));
-		//c->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
-		c->GetTransform()->SetScale(glm::vec3(0.001f, 0.001f, 0.001f));
-	}*/
+	b->GetTransform()->SetScale(glm::vec3(0.2f, 0.2f, 0.2f));	
 
 	//Object Shield
 	//1
@@ -1069,7 +1039,7 @@ void Application::Loop()
 			theSoundMgr->getSnd("armor")->play(0);
 			armor = true;
 			timer = 600;
-			shield->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(0.f, 0.0f, 3.f));	
+			shield->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(0.f, 0.0f, 3.f));
 			shield2->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(1.f, 0.f, 0.f));
 			shield3->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(-1.f, 0.f, 0.f));
 		}
@@ -1257,13 +1227,10 @@ void Application::Loop()
 			grounded = false;
 		}
 
-
-
-
 		//poll SDL events
 		while (SDL_PollEvent(&event))
 		{
-			
+
 			switch (event.type)
 			{
 			case SDL_QUIT:
@@ -1300,6 +1267,7 @@ void Application::Loop()
 				case SDLK_t:
 					//spawnSomethingBone();
 					//Score Text
+
 					break;
 				case SDLK_o:
 					b->AddComponent(cc);
@@ -1323,7 +1291,7 @@ void Application::Loop()
 				case SDLK_SPACE:
 					gameActive = true;
 					break;
-				case SDLK_l:					
+				case SDLK_l:
 					if (musicOn)
 					{
 						theSoundMgr->getSnd("theme")->pauseMusic();
@@ -1353,10 +1321,12 @@ void Application::Loop()
 		{
 			b->GetTransform()->AddPosition(glm::vec3(-0.3f, 0.f, 0.f));
 		}
-		if 	(currentKeyStates[SDL_SCANCODE_A])
+		if (currentKeyStates[SDL_SCANCODE_A])
 		{
 			b->GetTransform()->AddPosition(glm::vec3(0.3f, 0.f, 0.f));
-		}
+		}			
+		
+		
 
 		auto currentTicks = std::chrono::high_resolution_clock::now();
 		float deltaTime = (float)std::chrono::duration_cast<std::chrono::microseconds>(currentTicks - prevTicks).count() / 100000;
