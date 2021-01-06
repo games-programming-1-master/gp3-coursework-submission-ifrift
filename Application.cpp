@@ -20,7 +20,6 @@
 Application *Application::m_application = nullptr;
 static cSoundMgr* theSoundMgr = cSoundMgr::getInstance();
 CameraComp* cc = new CameraComp();
-//cSound* theSound = cSound::pauseMusic();
 const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
 //Declaring Objects
 Entity* b = new Entity();
@@ -184,12 +183,11 @@ void Application::MousePos()
 
 void Application::GameInit()
 {
-	std::cout << "start of gameinit" << endl;
-
+	
 	//Init the sound manager------------------------------------------------------------------
 	if (theSoundMgr->initMixer())
 	{
-		//load game sounds
+		//load game sounds -> added in some new sounds
 		soundList = { "theme", "click", "woof", "whining", "bounce", "armor" };
 		soundTypes = { soundType::music, soundType::sfx, soundType::sfx, soundType::sfx, soundType::sfx, soundType::sfx };
 
@@ -243,8 +241,7 @@ void Application::GameInit()
 	MeshRenderer* n = b->GetComponent<MeshRenderer>();
 	b->GetTransform()->SetPosition(glm::vec3(5.f, 20.f, 20.f));
 	b->AddComponent<RigidBody>();
-	b->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(2.f, 0.5f, 2.f)));
-	//b->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
+	b->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(2.f, 0.5f, 2.f)));	
 	b->GetTransform()->SetScale(glm::vec3(0.2f, 0.2f, 0.2f));	
 
 	//Object Shield
@@ -263,39 +260,6 @@ void Application::GameInit()
 	shield->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(2.f, 0.1f, 0.2f)));
 	shield->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
 	shield->GetTransform()->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
-	/*
-	m_entities.push_back(shield2);
-	shield2->AddComponent(
-		new MeshRenderer(
-			Resources::GetInstance()->GetModel("Models/Shield.obj"),
-			Resources::GetInstance()->GetShader("simple"),
-			Resources::GetInstance()->GetTexture("Images/Textures/steel.jpg"))
-	);
-	MeshRenderer* m_shield2 = shield2->GetComponent<MeshRenderer>();
-
-	shield2->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(-5.f, 0.0f, 0.f));
-	shield2->GetTransform()->SetRotation(glm::quat(1.f, 0.f, -1.f, 0.f));
-	shield2->AddComponent<RigidBody>();
-	shield2->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(0.8f, 0.1f, 0.2f)));
-	shield2->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
-	shield2->GetTransform()->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));
-	//3
-	m_entities.push_back(shield3);
-	shield3->AddComponent(
-		new MeshRenderer(
-			Resources::GetInstance()->GetModel("Models/Shield.obj"),
-			Resources::GetInstance()->GetShader("simple"),
-			Resources::GetInstance()->GetTexture("Images/Textures/steel.jpg"))
-	);
-	MeshRenderer* m_shield3 = shield3->GetComponent<MeshRenderer>();
-
-	shield3->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(5.f, 0.0f, 0.f));
-	shield3->GetTransform()->SetRotation(glm::quat(1.f, 0.f, 1.f, 0.f));
-	shield3->AddComponent<RigidBody>();
-	shield3->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(0.8f, 0.1f, 0.2f)));
-	shield3->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
-	shield3->GetTransform()->SetScale(glm::vec3(0.1f, 0.1f, 0.1f));*/
-
 
 	//Object power up
 	m_entities.push_back(shieldCollect);
@@ -945,10 +909,8 @@ void Application::GameInit()
 
 void Application::Loop()
 {
-	
-
 	m_appState = AppState::RUNNING;	
-	//std::cout << playerX << std::endl;
+	
 	auto prevTicks = std::chrono::high_resolution_clock::now();
 	SDL_Event event;
 
@@ -1180,33 +1142,28 @@ void Application::Loop()
 
 		// If player is colliding with the ground then the player is "grounded" and able to jump
 		if (Physics::GetInstance()->Collision3D(b->GetComponent<RigidBody>()->Get(), 0, 0, ground->GetComponent<RigidBody>()->Get(), 1, 1) == true)
-		{
-			//std::cout << "Ground Col" << std::endl;
+		{			
 			grounded = true;
 		}
 		else if (Physics::GetInstance()->Collision3D(b->GetComponent<RigidBody>()->Get(), 0, 0, ground1->GetComponent<RigidBody>()->Get(), 1, 1) == true)
-		{
-			//std::cout << "Ground Col" << std::endl;
+		{			
 			grounded = true;
 		}
 		else if (Physics::GetInstance()->Collision3D(b->GetComponent<RigidBody>()->Get(), 0, 0, ground2->GetComponent<RigidBody>()->Get(), 1, 1) == true)
-		{
-			//std::cout << "Ground Col" << std::endl;
+		{			
 			grounded = true;
 		}
 		else if (Physics::GetInstance()->Collision3D(b->GetComponent<RigidBody>()->Get(), 0, 0, ground3->GetComponent<RigidBody>()->Get(), 1, 1) == true)
-		{
-			//std::cout << "Ground Col" << std::endl;
+		{			
 			grounded = true;
 		}
 		else if (Physics::GetInstance()->Collision3D(b->GetComponent<RigidBody>()->Get(), 0, 0, ground4->GetComponent<RigidBody>()->Get(), 1, 1) == true)
 		{
-			//std::cout << "Ground Col" << std::endl;
+			
 			grounded = true;
 		}
 		else if (Physics::GetInstance()->Collision3D(b->GetComponent<RigidBody>()->Get(), 0, 0, ground5->GetComponent<RigidBody>()->Get(), 1, 1) == true)
-		{
-			//std::cout << "Ground Col" << std::endl;
+		{			
 			grounded = true;
 		}
 		else
@@ -1275,7 +1232,7 @@ void Application::Loop()
 					}
 					break;
 				}
-				//record when the user releases a key
+				
 			case SDL_MOUSEMOTION:
 				/*INPUT->MoveMouse(glm::ivec2(event.motion.xrel, event.motion.yrel));
 				SDL_SetRelativeMouseMode(SDL_TRUE);
@@ -1531,8 +1488,6 @@ void Application::SetCamera(Camera* camera)
 	}
 }
 
-//test
-
 void Application::CreateRandomNumber()
 {
 	m_randomNumber = rand() % 20 + -10;
@@ -1560,8 +1515,7 @@ void Application::Test()
 			Resources::GetInstance()->GetTexture("Images/Textures/bone.jpg"))
 	);
 	MeshRenderer* m_life = life->GetComponent<MeshRenderer>();	
-	life->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(-6.f, 0.f, -6.f));
-	//life->GetTransform()->SetRotation(glm::quat(1.f, 0.f, 1.f, 0.f));
+	life->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(-6.f, 0.f, -6.f));	
 	life->AddComponent<RigidBody>();
 	life->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(0.f, 0.f, 0.f)));
 	life->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
@@ -1575,8 +1529,7 @@ void Application::Test()
 			Resources::GetInstance()->GetTexture("Images/Textures/bone.jpg"))
 	);
 	MeshRenderer* m_life2 = life2->GetComponent<MeshRenderer>();	
-	life2->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(-3.f, 0.f, -6.f));
-	//life2->GetTransform()->SetRotation(glm::quat(1.f, 0.f, 1.f, 0.f));
+	life2->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(-3.f, 0.f, -6.f));	
 	life2->AddComponent<RigidBody>();
 	life2->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(0.f, 0.f, 0.f)));
 	life2->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
@@ -1590,8 +1543,7 @@ void Application::Test()
 			Resources::GetInstance()->GetTexture("Images/Textures/bone.jpg"))
 	);
 	MeshRenderer* m_life3 = life3->GetComponent<MeshRenderer>();	
-	life3->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(0.f, 0.f, -6.f));
-	//life3->GetTransform()->SetRotation(glm::quat(1.f, 0.f, 1.f, 0.f));
+	life3->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(0.f, 0.f, -6.f));	
 	life3->AddComponent<RigidBody>();
 	life3->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(0.f, 0.f, 0.f)));
 	life3->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
@@ -1605,8 +1557,7 @@ void Application::Test()
 			Resources::GetInstance()->GetTexture("Images/Textures/bone.jpg"))
 	);
 	MeshRenderer* m_life4 = life4->GetComponent<MeshRenderer>();	
-	life4->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(3.f, 0.f, -6.f));
-	//life4->GetTransform()->SetRotation(glm::quat(1.f, 0.f, 1.f, 0.f));
+	life4->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(3.f, 0.f, -6.f));	
 	life4->AddComponent<RigidBody>();
 	life4->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(0.f, 0.f, 0.f)));
 	life4->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
@@ -1620,8 +1571,7 @@ void Application::Test()
 			Resources::GetInstance()->GetTexture("Images/Textures/bone.jpg"))
 	);
 	MeshRenderer* m_life5 = life5->GetComponent<MeshRenderer>();	
-	life5->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(6.f, 0.f, -6.f));
-	//life5->GetTransform()->SetRotation(glm::quat(1.f, 0.f, 1.f, 0.f));
+	life5->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(6.f, 0.f, -6.f));	
 	life5->AddComponent<RigidBody>();
 	life5->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(0.f, 0.f, 0.f)));
 	life5->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
