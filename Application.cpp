@@ -307,7 +307,7 @@ void Application::GameInit()
 	);
 	MeshRenderer* m_shieldCollect = shieldCollect->GetComponent<MeshRenderer>();
 
-	shieldCollect->GetTransform()->SetPosition(glm::vec3(5.f, 10.0f, 30.f));
+	shieldCollect->GetTransform()->SetPosition(glm::vec3(5.f, 10.0f, 50.f));
 	shieldCollect->AddComponent<RigidBody>();
 	shieldCollect->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(0.8f, 0.1f, 0.2f)));
 	shieldCollect->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
@@ -464,7 +464,7 @@ void Application::GameInit()
 			Resources::GetInstance()->GetTexture("Images/Textures/redBlack.jfif"))
 	);
 	MeshRenderer* m_spider = spider->GetComponent<MeshRenderer>();
-	spider->GetTransform()->SetPosition(glm::vec3(8.f, 20.f, 30.f));
+	spider->GetTransform()->SetPosition(glm::vec3(8.f, 20.f, 60.f));
 	spider->GetTransform()->SetRotation(glm::quat(1.f, 0.f, -1.f, 0.f));
 	spider->AddComponent<RigidBody>();
 	spider->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(2.f, 1.f, 2.f)));
@@ -930,6 +930,9 @@ void Application::GameInit()
 		wallRight14->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
 		wallRight14->GetTransform()->SetScale(glm::vec3(1.f, 1.0f, 1.f));
 
+		//Lives ----------------------------------------------------------------------
+		Test();
+
 	Entity* c = new Entity();
 	c = new Entity();
 	m_entities.push_back(c);
@@ -1224,21 +1227,8 @@ void Application::Loop()
 				m_appState = AppState::QUITTING;
 				break;
 			case SDL_KEYDOWN:
-				switch (event.key.keysym.sym) {
-				case SDLK_a:
-					//b->GetTransform()->AddPosition(glm::vec3(1.0f, 0.f, 0.f));
-					//b->GetComponent<RigidBody>()->Get()->applyCentralImpulse(btVector3(1.f, 0.f, 0.f));
-					break;
-				case SDLK_d:
-					//b->GetTransform()->AddPosition(glm::vec3(-1.0f, 0.f, 0.f));
-					//b->GetComponent<RigidBody>()->Get()->applyCentralImpulse(btVector3(-1.f, 0.f, 0.f));
-					break;
-				case SDLK_s:
-					b->GetTransform()->AddPosition(glm::vec3(0.0f, 0.f, -1.f));
-					break;
-				case SDLK_w:
-					b->GetTransform()->AddPosition(glm::vec3(0.0f, 0.f, 1.f));
-					theSoundMgr->getSnd("click")->play(0);
+				switch (event.key.keysym.sym) {					
+				case SDLK_w:					
 					break;
 				case SDLK_q:
 					m_mainCamera->SetProjPersp(45.f, (float)WINDOW_W / (float)WINDOW_H, 0.1f, 1000.f);
@@ -1247,23 +1237,20 @@ void Application::Loop()
 				case SDLK_e:
 					m_mainCamera->SetProjOrtho(-500, (float)WINDOW_W, 0, (float)WINDOW_H, 0.1f, 1000.f);
 					theSoundMgr->getSnd("theme")->pauseMusic();
-					break;
-				case SDLK_t:
-					//spawnSomethingBone();
-					//Score Text
-					Test();
-					break;
+					break;				
 				case SDLK_o:
 					b->AddComponent(cc);
 					cc->Start2();
 					m_mainCamera->SetCamera2();
+					currentCamera = 2;
 					break;
 				case SDLK_p:
 					b->AddComponent(cc);
 					cc->Start();
 					m_mainCamera->SetCamera1();
+					currentCamera = 1;
 					break;
-				case SDLK_i:
+				case SDLK_SPACE:
 					if (grounded)
 					{
 						b->GetComponent<RigidBody>()->Get()->applyCentralImpulse(btVector3(0.f, 20.f, 0.f));
@@ -1272,10 +1259,10 @@ void Application::Loop()
 				case SDLK_ESCAPE:
 					m_appState = AppState::QUITTING;
 					break;
-				case SDLK_SPACE:
+				case SDLK_RETURN:
 					gameActive = true;
 					break;
-				case SDLK_l:
+				case SDLK_LSHIFT:
 					if (musicOn)
 					{
 						theSoundMgr->getSnd("theme")->pauseMusic();
@@ -1301,11 +1288,11 @@ void Application::Loop()
 			}
 		}
 
-		if (currentKeyStates[SDL_SCANCODE_D])
+		if (currentKeyStates[SDL_SCANCODE_D] && gameActive)
 		{
 			b->GetTransform()->AddPosition(glm::vec3(-0.3f, 0.f, 0.f));
 		}
-		if (currentKeyStates[SDL_SCANCODE_A])
+		if (currentKeyStates[SDL_SCANCODE_A] && gameActive)
 		{
 			b->GetTransform()->AddPosition(glm::vec3(0.3f, 0.f, 0.f));
 			
@@ -1319,91 +1306,137 @@ void Application::Loop()
 		prevTicks = currentTicks;
 
 		if (gameActive)
-		{		
-		shield->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(0.f, 0.0f, 3.f));
-		shield2->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(-2.f, 0.0f, 0.f));
-		shield3->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(2.f, 0.0f, 0.f));
-		bone->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
-		bone2->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
-		bone3->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
-		spider->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
-		ground->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
-		ground1->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
-		ground2->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
-		ground3->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
-		ground4->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
-		ground5->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
-		wallLeft1->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
-		wallLeft2->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
-		wallLeft3->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
-		wallLeft4->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
-		wallLeft5->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
-		wallLeft6->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
-		wallLeft7->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
-		wallLeft8->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
-		wallLeft9->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
-		wallLeft10->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
-		wallLeft11->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
-		wallLeft12->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
-		wallLeft13->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
-		wallLeft14->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
-		wallRight1->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
-		wallRight2->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
-		wallRight3->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
-		wallRight4->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
-		wallRight5->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
-		wallRight6->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
-		wallRight7->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
-		wallRight8->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
-		wallRight9->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
-		wallRight10->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
-		wallRight11->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
-		wallRight12->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
-		wallRight13->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
-		wallRight14->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
-
-		shieldCollect->GetTransform()->AddRotation(glm::quat(1.0f, 0.f, -0.05f, 0.f));
-		shieldCollect->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
-
-				
-
-		switch (lives)
 		{
-		case 5:
-			life->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(-6.f, 0.f, -6.f));
-			life2->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(-3.f, 0.f, -6.f));
-			life3->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(0.f, 0.f, -6.f));
-			life4->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(3.f, 0.f, -6.f));
-			life5->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(6.f, 0.f, -6.f));
-		case 4:
-			life->GetTransform()->SetPosition(glm::vec3(0.f, -100.f, 0.f));
-			life2->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(-3.f, 0.f, -6.f));
-			life3->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(0.f, 0.f, -6.f));
-			life4->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(3.f, 0.f, -6.f));
-			life5->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(6.f, 0.f, -6.f));
-			break;
-		case 3:
-			life2->GetTransform()->SetPosition(glm::vec3(0.f, -100.f, 0.f));
-			life3->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(0.f, 0.f, -6.f));
-			life4->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(3.f, 0.f, -6.f));
-			life5->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(6.f, 0.f, -6.f));
-			break;
-		case 2:
-			life3->GetTransform()->SetPosition(glm::vec3(0.f, -100.f, 0.f));
-			life4->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(3.f, 0.f, -6.f));
-			life5->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(6.f, 0.f, -6.f));
-			break;
-		case 1:
-			life4->GetTransform()->SetPosition(glm::vec3(0.f, -100.f, 0.f));
-			life5->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(6.f, 0.f, -6.f));
-			break;
-		case 0:
-			life5->GetTransform()->SetPosition(glm::vec3(0.f, -100.f, 0.f));
-			gameActive = false;
-			break;
-		}
+			shield->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(0.f, 0.0f, 3.f));
+			shield2->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(-2.f, 0.0f, 0.f));
+			shield3->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(2.f, 0.0f, 0.f));
+			bone->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
+			bone2->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
+			bone3->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
+			spider->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
+			ground->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
+			ground1->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
+			ground2->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
+			ground3->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
+			ground4->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
+			ground5->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
+			wallLeft1->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
+			wallLeft2->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
+			wallLeft3->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
+			wallLeft4->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
+			wallLeft5->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
+			wallLeft6->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
+			wallLeft7->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
+			wallLeft8->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
+			wallLeft9->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
+			wallLeft10->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
+			wallLeft11->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
+			wallLeft12->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
+			wallLeft13->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
+			wallLeft14->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
+			wallRight1->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
+			wallRight2->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
+			wallRight3->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
+			wallRight4->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
+			wallRight5->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
+			wallRight6->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
+			wallRight7->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
+			wallRight8->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
+			wallRight9->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
+			wallRight10->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
+			wallRight11->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
+			wallRight12->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
+			wallRight13->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
+			wallRight14->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
 
-		}		
+			shieldCollect->GetTransform()->AddRotation(glm::quat(1.0f, 0.f, -0.05f, 0.f));
+			shieldCollect->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
+
+
+			switch (currentCamera)
+			{
+			case 1:
+
+				life2->GetTransform()->SetRotation(glm::quat(1.f, 0.f, 1.f, 0.5f));				
+				life3->GetTransform()->SetRotation(glm::quat(1.f, 0.f, 1.f, 0.5f));
+				life4->GetTransform()->SetRotation(glm::quat(1.f, 0.f, 1.f, 0.5f));				
+				life5->GetTransform()->SetRotation(glm::quat(1.f, 0.f, 1.f, 0.5f));
+				switch (lives)
+				{
+				case 5:
+					life->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(0.f, 0.f, -6.f));
+					life2->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(-3.f, 0.f, -6.f));
+					life3->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(-1.f, 0.f, -6.f));
+					life4->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(1.f, 0.f, -6.f));
+					life5->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(3.f, 0.f, -6.f));
+				case 4:
+					life->GetTransform()->SetPosition(glm::vec3(0.f, -100.f, 0.f));
+					life2->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(-3.f, 0.f, -6.f));
+					life3->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(-1.f, 0.f, -6.f));
+					life4->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(1.f, 0.f, -6.f));
+					life5->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(3.f, 0.f, -6.f));
+					break;
+				case 3:
+					life2->GetTransform()->SetPosition(glm::vec3(0.f, -100.f, 0.f));
+					life3->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(-1.f, 0.f, -6.f));
+					life4->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(1.f, 0.f, -6.f));
+					life5->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(3.f, 0.f, -6.f));
+					break;
+				case 2:
+					life3->GetTransform()->SetPosition(glm::vec3(0.f, -100.f, 0.f));
+					life4->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(1.f, 0.f, -6.f));
+					life5->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(3.f, 0.f, -6.f));
+					break;
+				case 1:
+					life4->GetTransform()->SetPosition(glm::vec3(0.f, -100.f, 0.f));
+					life5->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(3.f, 0.f, -6.f));
+					break;
+				case 0:
+					life5->GetTransform()->SetPosition(glm::vec3(0.f, -100.f, 0.f));
+					gameActive = false;
+					theSoundMgr->getSnd("theme")->pauseMusic();
+					break;
+				}
+				break;
+			case 2:
+				life2->GetTransform()->SetRotation(glm::quat(1.f, 0.f, 0.5f, 1.0f));
+				life3->GetTransform()->SetRotation(glm::quat(1.f, 0.f, 0.5f, 1.0f));
+				life4->GetTransform()->SetRotation(glm::quat(1.f, 0.f, 0.5f, 1.0f));
+				life5->GetTransform()->SetRotation(glm::quat(1.f, 0.f, 0.5f, 1.0f));
+				
+				switch (lives)
+				{
+				case 4:
+					life->GetTransform()->SetPosition(glm::vec3(0.f, -100.f, 0.f));
+					life2->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(4.f, 0.f, -10.f));
+					life3->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(6.f, 0.f, -8.f));
+					life4->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(8.f, 0.f, -6.f));
+					life5->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(10.f, 0.f, -4.f));
+					break;
+				case 3:
+					life2->GetTransform()->SetPosition(glm::vec3(0.f, -100.f, 0.f));
+					life3->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(6.f, 0.f, -8.f));
+					life4->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(8.f, 0.f, -6.f));
+					life5->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(10.f, 0.f, -4.f));
+					break;
+				case 2:
+					life3->GetTransform()->SetPosition(glm::vec3(0.f, -100.f, 0.f));
+					life4->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(8.f, 0.f, -6.f));
+					life5->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(10.f, 0.f, -4.f));
+					break;
+				case 1:
+					life4->GetTransform()->SetPosition(glm::vec3(0.f, -100.f, 0.f));
+					life5->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(10.f, 0.f, -4.f));
+					break;
+				case 0:
+					life5->GetTransform()->SetPosition(glm::vec3(0.f, -100.f, 0.f));
+					gameActive = false;
+					theSoundMgr->getSnd("theme")->pauseMusic();
+					break;
+				}
+				break;
+			}
+		}
 
 		if (armor)
 		{					
@@ -1519,17 +1552,16 @@ void Application::spawnSomethingSpider()
 
 void Application::Test()
 {
-		m_entities.push_back(life);
+	m_entities.push_back(life);
 	life->AddComponent(
 		new MeshRenderer(
 			Resources::GetInstance()->GetModel("Models/Dachshund.obj"),
 			Resources::GetInstance()->GetShader("simple"),
 			Resources::GetInstance()->GetTexture("Images/Textures/bone.jpg"))
 	);
-	MeshRenderer* m_life = life->GetComponent<MeshRenderer>();
-	//b->AddComponent(m_bone4);
+	MeshRenderer* m_life = life->GetComponent<MeshRenderer>();	
 	life->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(-6.f, 0.f, -6.f));
-	life->GetTransform()->SetRotation(glm::quat(1.f, 0.f, 1.f, 0.f));
+	//life->GetTransform()->SetRotation(glm::quat(1.f, 0.f, 1.f, 0.f));
 	life->AddComponent<RigidBody>();
 	life->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(0.f, 0.f, 0.f)));
 	life->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
@@ -1542,10 +1574,9 @@ void Application::Test()
 			Resources::GetInstance()->GetShader("simple"),
 			Resources::GetInstance()->GetTexture("Images/Textures/bone.jpg"))
 	);
-	MeshRenderer* m_life2 = life2->GetComponent<MeshRenderer>();
-	//b->AddComponent(m_bone4)
+	MeshRenderer* m_life2 = life2->GetComponent<MeshRenderer>();	
 	life2->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(-3.f, 0.f, -6.f));
-	life2->GetTransform()->SetRotation(glm::quat(1.f, 0.f, 1.f, 0.f));
+	//life2->GetTransform()->SetRotation(glm::quat(1.f, 0.f, 1.f, 0.f));
 	life2->AddComponent<RigidBody>();
 	life2->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(0.f, 0.f, 0.f)));
 	life2->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
@@ -1558,10 +1589,9 @@ void Application::Test()
 			Resources::GetInstance()->GetShader("simple"),
 			Resources::GetInstance()->GetTexture("Images/Textures/bone.jpg"))
 	);
-	MeshRenderer* m_life3 = life3->GetComponent<MeshRenderer>();
-	//b->AddComponent(m_bone4);
+	MeshRenderer* m_life3 = life3->GetComponent<MeshRenderer>();	
 	life3->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(0.f, 0.f, -6.f));
-	life3->GetTransform()->SetRotation(glm::quat(1.f, 0.f, 1.f, 0.f));
+	//life3->GetTransform()->SetRotation(glm::quat(1.f, 0.f, 1.f, 0.f));
 	life3->AddComponent<RigidBody>();
 	life3->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(0.f, 0.f, 0.f)));
 	life3->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
@@ -1574,10 +1604,9 @@ void Application::Test()
 			Resources::GetInstance()->GetShader("simple"),
 			Resources::GetInstance()->GetTexture("Images/Textures/bone.jpg"))
 	);
-	MeshRenderer* m_life4 = life4->GetComponent<MeshRenderer>();
-	//b->AddComponent(m_bone4);
+	MeshRenderer* m_life4 = life4->GetComponent<MeshRenderer>();	
 	life4->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(3.f, 0.f, -6.f));
-	life4->GetTransform()->SetRotation(glm::quat(1.f, 0.f, 1.f, 0.f));
+	//life4->GetTransform()->SetRotation(glm::quat(1.f, 0.f, 1.f, 0.f));
 	life4->AddComponent<RigidBody>();
 	life4->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(0.f, 0.f, 0.f)));
 	life4->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
@@ -1590,13 +1619,11 @@ void Application::Test()
 			Resources::GetInstance()->GetShader("simple"),
 			Resources::GetInstance()->GetTexture("Images/Textures/bone.jpg"))
 	);
-	MeshRenderer* m_life5 = life5->GetComponent<MeshRenderer>();
-	//b->AddComponent(m_bone4);
+	MeshRenderer* m_life5 = life5->GetComponent<MeshRenderer>();	
 	life5->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(6.f, 0.f, -6.f));
-	life5->GetTransform()->SetRotation(glm::quat(1.f, 0.f, 1.f, 0.f));
+	//life5->GetTransform()->SetRotation(glm::quat(1.f, 0.f, 1.f, 0.f));
 	life5->AddComponent<RigidBody>();
 	life5->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(0.f, 0.f, 0.f)));
 	life5->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
 	life5->GetTransform()->SetScale(glm::vec3(0.05f, 0.05f, 0.05f));
-
 };
