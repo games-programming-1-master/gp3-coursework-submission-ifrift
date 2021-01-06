@@ -33,7 +33,11 @@ Entity* shield4 = new Entity();
 Entity* shieldCollect = new Entity();
 Entity* bone2 = new Entity();
 Entity* bone3 = new Entity();
-Entity* bone4 = new Entity();
+Entity* life = new Entity();
+Entity* life2 = new Entity();
+Entity* life3 = new Entity();
+Entity* life4 = new Entity();
+Entity* life5 = new Entity();
 Entity* ground = new Entity();
 Entity* ground1 = new Entity();
 Entity* ground2 = new Entity();
@@ -109,53 +113,31 @@ void Application::Init()
 		SDL_WINDOW_OPENGL);
 
 	//Display Socre - https://www.youtube.com/watch?v=lfz_X5YgpT8
-		//glDisable(GL_DEPTH_TEST);
+		//The below code was going to be used to display the players current score and current number of lives. I was not able to get this to work properly and made the .exe file crash
+/*
 	renderTarget = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	TTF_Font* font = TTF_OpenFont("BlackPearl.ttf", 50);
 	SDL_Color color = { 144, 77, 255, 255 };
-	/*
-	//Convert int to Const Char*
+	
+	//Converting int to Const Char*-------------------------------------------------------------------------------------------------
 	string str = "Score = " + to_string(score) + ", lives = " + to_string(lives) + " A = Left, D = Right";
 	char* cstr = new char[str.length() + 1];
-	strcpy(cstr, str.c_str());
-	std::cout << cstr << endl;
+	strcpy(cstr, str.c_str());	
 	
-	
-	SDL_Surface* textSurface = TTF_RenderText_Solid(font, cstr, color);	
-	std::cout << "mid ui" << endl;
+	SDL_Surface* textSurface = TTF_RenderText_Solid(font, cstr, color);		
 	SDL_Texture* text = SDL_CreateTextureFromSurface(renderTarget, textSurface);	
 	SDL_Rect textRect;	
-	textRect.x = textRect.y = 0;
-	
+	textRect.x = textRect.y = 0;	
 	
 	SDL_QueryTexture(text, NULL, NULL, &textRect.w, &textRect.h);
 	SDL_FreeSurface(textSurface);
 	SDL_RenderCopy(renderTarget, text, NULL, &textRect);
-	SDL_RenderPresent(renderTarget);*/
+	SDL_RenderPresent(renderTarget);*/	
 	
-	/*renderTarget1 = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-	TTF_Font* font1 = TTF_OpenFont("BlackPearl.ttf", 40);
-	SDL_Color color1 = { 144, 77, 255, 255 };
-	//Convert int to Const Char*
-	//string str = to_string(score);
-	//char* cstr = new char[str.length() + 1];
-	//strcpy(cstr, str.c_str());
-	//std::cout << cstr << endl;
-
-	SDL_Surface* textSurface1 = TTF_RenderText_Solid(font1, "Score = ", color1);
-	SDL_Texture* text1 = SDL_CreateTextureFromSurface(renderTarget1, textSurface1);
-	SDL_Rect textRect1;
-	textRect1.x = textRect1.y = 50;
-
-	SDL_QueryTexture(text1, NULL, NULL, &textRect1.w, &textRect1.h);
-	SDL_FreeSurface(textSurface1);
-	SDL_RenderCopy(renderTarget1, text1, NULL, &textRect1);
-	SDL_RenderPresent(renderTarget1);*/
 	
 	SDL_CaptureMouse(SDL_TRUE);
 
-	OpenGlInit();	
-	std::cout << "before gameinit" << endl;
+	OpenGlInit();		
 	GameInit();
 
 }
@@ -1019,7 +1001,7 @@ void Application::Loop()
 			std::cout << "Spider Col, lives = " << lives << std::endl;
 			theSoundMgr->getSnd("whining")->play(0);
 			spawnSomethingSpider();
-			lives--;
+			lives--;			
 		}
 		//Spider and death box - Reset Spider
 		if (Physics::GetInstance()->Collision3D(spider->GetComponent<RigidBody>()->Get(), 0, 0, deathBox->GetComponent<RigidBody>()->Get(), 1, 1) == true)
@@ -1228,7 +1210,7 @@ void Application::Loop()
 		{
 			grounded = false;
 		}
-
+		
 		//poll SDL events
 		while (SDL_PollEvent(&event))
 		{
@@ -1382,6 +1364,45 @@ void Application::Loop()
 
 		shieldCollect->GetTransform()->AddRotation(glm::quat(1.0f, 0.f, -0.05f, 0.f));
 		shieldCollect->GetTransform()->AddPosition(glm::vec3(0.f, 0.f, moving));
+
+				
+
+		switch (lives)
+		{
+		case 5:
+			life->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(-6.f, 0.f, -6.f));
+			life2->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(-3.f, 0.f, -6.f));
+			life3->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(0.f, 0.f, -6.f));
+			life4->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(3.f, 0.f, -6.f));
+			life5->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(6.f, 0.f, -6.f));
+		case 4:
+			life->GetTransform()->SetPosition(glm::vec3(0.f, -100.f, 0.f));
+			life2->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(-3.f, 0.f, -6.f));
+			life3->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(0.f, 0.f, -6.f));
+			life4->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(3.f, 0.f, -6.f));
+			life5->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(6.f, 0.f, -6.f));
+			break;
+		case 3:
+			life2->GetTransform()->SetPosition(glm::vec3(0.f, -100.f, 0.f));
+			life3->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(0.f, 0.f, -6.f));
+			life4->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(3.f, 0.f, -6.f));
+			life5->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(6.f, 0.f, -6.f));
+			break;
+		case 2:
+			life3->GetTransform()->SetPosition(glm::vec3(0.f, -100.f, 0.f));
+			life4->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(3.f, 0.f, -6.f));
+			life5->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(6.f, 0.f, -6.f));
+			break;
+		case 1:
+			life4->GetTransform()->SetPosition(glm::vec3(0.f, -100.f, 0.f));
+			life5->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(6.f, 0.f, -6.f));
+			break;
+		case 0:
+			life5->GetTransform()->SetPosition(glm::vec3(0.f, -100.f, 0.f));
+			gameActive = false;
+			break;
+		}
+
 		}		
 
 		if (armor)
@@ -1498,45 +1519,84 @@ void Application::spawnSomethingSpider()
 
 void Application::Test()
 {
-	Resources::GetInstance()->AddModel("Models/cube.obj");
-	Resources::GetInstance()->AddModel("Models/cube2.obj");
-	Resources::GetInstance()->AddModel("Models/Dachshund.obj");
-	Resources::GetInstance()->AddModel("Models/dalek.obj");
-	Resources::GetInstance()->AddModel("Models/bone.obj");
-	Resources::GetInstance()->AddModel("Models/bridge.obj");
-	Resources::GetInstance()->AddModel("Models/Wall.obj");
-	Resources::GetInstance()->AddModel("Models/Shield.obj");
-	Resources::GetInstance()->AddTexture("Images/Textures/Wood.jpg");
-	Resources::GetInstance()->AddTexture("Images/Textures/fur.jpg");
-	Resources::GetInstance()->AddTexture("Images/Textures/bone.jpg");
-	Resources::GetInstance()->AddTexture("Images/Textures/floor.jpg");
-	Resources::GetInstance()->AddTexture("Images/Textures/black.jpg");
-	Resources::GetInstance()->AddTexture("Images/Textures/redBlack.jfif");
-	Resources::GetInstance()->AddTexture("Images/Textures/wall.jpg");
-	Resources::GetInstance()->AddTexture("Images/Textures/wall2.bmp");
-	Resources::GetInstance()->AddTexture("Images/Textures/steel.jpg");
-
-	/*Resources::GetInstance()->AddShader(std::make_shared<ShaderProgram>(ASSET_PATH + "Shaders/Phong.frag",
-	ASSET_PATH + "Shaders/Phong.vert"),
-	"simple"*/
-
-	Resources::GetInstance()->AddShader(std::make_shared<ShaderProgram>(ASSET_PATH + "Shaders/basic_VERT.glsl",
-		ASSET_PATH + "Shaders/basic_FRAG.glsl"),
-		"simple");
-
-		m_entities.push_back(bone4);
-	bone4->AddComponent(
+		m_entities.push_back(life);
+	life->AddComponent(
 		new MeshRenderer(
-			Resources::GetInstance()->GetModel("Models/bone.obj"),
+			Resources::GetInstance()->GetModel("Models/Dachshund.obj"),
 			Resources::GetInstance()->GetShader("simple"),
-			Resources::GetInstance()->GetTexture("Images/Textures/steel.jpg"))
+			Resources::GetInstance()->GetTexture("Images/Textures/bone.jpg"))
 	);
-	MeshRenderer* m_shield4 = bone4->GetComponent<MeshRenderer>();
+	MeshRenderer* m_life = life->GetComponent<MeshRenderer>();
+	//b->AddComponent(m_bone4);
+	life->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(-6.f, 0.f, -6.f));
+	life->GetTransform()->SetRotation(glm::quat(1.f, 0.f, 1.f, 0.f));
+	life->AddComponent<RigidBody>();
+	life->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(0.f, 0.f, 0.f)));
+	life->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
+	life->GetTransform()->SetScale(glm::vec3(0.05f, 0.05f, 0.05f));
+		
+	m_entities.push_back(life2);
+	life2->AddComponent(
+		new MeshRenderer(
+			Resources::GetInstance()->GetModel("Models/Dachshund.obj"),
+			Resources::GetInstance()->GetShader("simple"),
+			Resources::GetInstance()->GetTexture("Images/Textures/bone.jpg"))
+	);
+	MeshRenderer* m_life2 = life2->GetComponent<MeshRenderer>();
+	//b->AddComponent(m_bone4)
+	life2->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(-3.f, 0.f, -6.f));
+	life2->GetTransform()->SetRotation(glm::quat(1.f, 0.f, 1.f, 0.f));
+	life2->AddComponent<RigidBody>();
+	life2->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(0.f, 0.f, 0.f)));
+	life2->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
+	life2->GetTransform()->SetScale(glm::vec3(0.05f, 0.05f, 0.05f));
 
-	bone4->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(-7.f, bonePos, -6.f));
-	bone4->AddComponent<RigidBody>();
-	bone4->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(2.f, 0.1f, 0.2f)));
-	bone4->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
-	bone4->GetTransform()->SetScale(glm::vec3(0.005f, 0.005f, 0.005f));
-	bonePos++;
+	m_entities.push_back(life3);
+	life3->AddComponent(
+		new MeshRenderer(
+			Resources::GetInstance()->GetModel("Models/Dachshund.obj"),
+			Resources::GetInstance()->GetShader("simple"),
+			Resources::GetInstance()->GetTexture("Images/Textures/bone.jpg"))
+	);
+	MeshRenderer* m_life3 = life3->GetComponent<MeshRenderer>();
+	//b->AddComponent(m_bone4);
+	life3->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(0.f, 0.f, -6.f));
+	life3->GetTransform()->SetRotation(glm::quat(1.f, 0.f, 1.f, 0.f));
+	life3->AddComponent<RigidBody>();
+	life3->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(0.f, 0.f, 0.f)));
+	life3->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
+	life3->GetTransform()->SetScale(glm::vec3(0.05f, 0.05f, 0.05f));
+
+	m_entities.push_back(life4);
+	life4->AddComponent(
+		new MeshRenderer(
+			Resources::GetInstance()->GetModel("Models/Dachshund.obj"),
+			Resources::GetInstance()->GetShader("simple"),
+			Resources::GetInstance()->GetTexture("Images/Textures/bone.jpg"))
+	);
+	MeshRenderer* m_life4 = life4->GetComponent<MeshRenderer>();
+	//b->AddComponent(m_bone4);
+	life4->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(3.f, 0.f, -6.f));
+	life4->GetTransform()->SetRotation(glm::quat(1.f, 0.f, 1.f, 0.f));
+	life4->AddComponent<RigidBody>();
+	life4->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(0.f, 0.f, 0.f)));
+	life4->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
+	life4->GetTransform()->SetScale(glm::vec3(0.05f, 0.05f, 0.05f));
+
+	m_entities.push_back(life5);
+	life5->AddComponent(
+		new MeshRenderer(
+			Resources::GetInstance()->GetModel("Models/Dachshund.obj"),
+			Resources::GetInstance()->GetShader("simple"),
+			Resources::GetInstance()->GetTexture("Images/Textures/bone.jpg"))
+	);
+	MeshRenderer* m_life5 = life5->GetComponent<MeshRenderer>();
+	//b->AddComponent(m_bone4);
+	life5->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(6.f, 0.f, -6.f));
+	life5->GetTransform()->SetRotation(glm::quat(1.f, 0.f, 1.f, 0.f));
+	life5->AddComponent<RigidBody>();
+	life5->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(0.f, 0.f, 0.f)));
+	life5->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
+	life5->GetTransform()->SetScale(glm::vec3(0.05f, 0.05f, 0.05f));
+
 };

@@ -32,7 +32,7 @@ private:
 	bool grounded = false;
 	float m_randomNumber;
 	int score = 0;
-	int lives = 10;
+	int lives = 5;
 	int nSecs = 10;
 	float bonePos = 0.f;
 	bool armor = false;
