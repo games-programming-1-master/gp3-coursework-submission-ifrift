@@ -34,6 +34,7 @@ private:
 	int score = 0;
 	int lives = 10;
 	int nSecs = 10;
+	float bonePos = 0.f;
 	bool armor = false;
 	int timer;
 	bool gameActive = false;
@@ -74,6 +75,6 @@ public:
 	inline Camera* GetCamera() { return m_mainCamera; }
 	void SetCamera(Camera* camera);
 	void GameInit();	
-	
+	void Test();
 };
 

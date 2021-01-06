@@ -29,9 +29,11 @@ Entity* bone = new Entity();
 Entity* shield = new Entity();
 Entity* shield2 = new Entity();
 Entity* shield3 = new Entity();
+Entity* shield4 = new Entity();
 Entity* shieldCollect = new Entity();
 Entity* bone2 = new Entity();
 Entity* bone3 = new Entity();
+Entity* bone4 = new Entity();
 Entity* ground = new Entity();
 Entity* ground1 = new Entity();
 Entity* ground2 = new Entity();
@@ -1267,7 +1269,7 @@ void Application::Loop()
 				case SDLK_t:
 					//spawnSomethingBone();
 					//Score Text
-
+					Test();
 					break;
 				case SDLK_o:
 					b->AddComponent(cc);
@@ -1324,6 +1326,7 @@ void Application::Loop()
 		if (currentKeyStates[SDL_SCANCODE_A])
 		{
 			b->GetTransform()->AddPosition(glm::vec3(0.3f, 0.f, 0.f));
+			
 		}			
 		
 		
@@ -1492,3 +1495,48 @@ void Application::spawnSomethingSpider()
 	spider->GetTransform()->SetPosition(glm::vec3(m_randomNumber, 10.f, 70.f));
 	spider->GetTransform()->SetRotation(glm::quat(1.f, 0.f, -1.f, 0.f));
 }
+
+void Application::Test()
+{
+	Resources::GetInstance()->AddModel("Models/cube.obj");
+	Resources::GetInstance()->AddModel("Models/cube2.obj");
+	Resources::GetInstance()->AddModel("Models/Dachshund.obj");
+	Resources::GetInstance()->AddModel("Models/dalek.obj");
+	Resources::GetInstance()->AddModel("Models/bone.obj");
+	Resources::GetInstance()->AddModel("Models/bridge.obj");
+	Resources::GetInstance()->AddModel("Models/Wall.obj");
+	Resources::GetInstance()->AddModel("Models/Shield.obj");
+	Resources::GetInstance()->AddTexture("Images/Textures/Wood.jpg");
+	Resources::GetInstance()->AddTexture("Images/Textures/fur.jpg");
+	Resources::GetInstance()->AddTexture("Images/Textures/bone.jpg");
+	Resources::GetInstance()->AddTexture("Images/Textures/floor.jpg");
+	Resources::GetInstance()->AddTexture("Images/Textures/black.jpg");
+	Resources::GetInstance()->AddTexture("Images/Textures/redBlack.jfif");
+	Resources::GetInstance()->AddTexture("Images/Textures/wall.jpg");
+	Resources::GetInstance()->AddTexture("Images/Textures/wall2.bmp");
+	Resources::GetInstance()->AddTexture("Images/Textures/steel.jpg");
+
+	/*Resources::GetInstance()->AddShader(std::make_shared<ShaderProgram>(ASSET_PATH + "Shaders/Phong.frag",
+	ASSET_PATH + "Shaders/Phong.vert"),
+	"simple"*/
+
+	Resources::GetInstance()->AddShader(std::make_shared<ShaderProgram>(ASSET_PATH + "Shaders/basic_VERT.glsl",
+		ASSET_PATH + "Shaders/basic_FRAG.glsl"),
+		"simple");
+
+		m_entities.push_back(bone4);
+	bone4->AddComponent(
+		new MeshRenderer(
+			Resources::GetInstance()->GetModel("Models/bone.obj"),
+			Resources::GetInstance()->GetShader("simple"),
+			Resources::GetInstance()->GetTexture("Images/Textures/steel.jpg"))
+	);
+	MeshRenderer* m_shield4 = bone4->GetComponent<MeshRenderer>();
+
+	bone4->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(-7.f, bonePos, -6.f));
+	bone4->AddComponent<RigidBody>();
+	bone4->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(2.f, 0.1f, 0.2f)));
+	bone4->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
+	bone4->GetTransform()->SetScale(glm::vec3(0.005f, 0.005f, 0.005f));
+	bonePos++;
+};
