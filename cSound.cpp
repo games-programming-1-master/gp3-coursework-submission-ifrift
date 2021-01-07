@@ -67,7 +67,7 @@ void cSound::play(int loop)
 	}
 }
 
-//Pauses the music
+//Pauses the music https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_62.html
 void cSound::pauseMusic()
 {
 	Mix_PauseMusic();
