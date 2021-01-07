@@ -77,8 +77,6 @@ Entity* wallRight13 = new Entity();
 Entity* wallRight14 = new Entity();
 
 
-
-
 Application::Application()
 {
 }
@@ -182,8 +180,7 @@ void Application::MousePos()
 }
 
 void Application::GameInit()
-{
-	
+{	
 	//Init the sound manager------------------------------------------------------------------
 	if (theSoundMgr->initMixer())
 	{
@@ -218,19 +215,19 @@ void Application::GameInit()
 	Resources::GetInstance()->AddTexture("Images/Textures/redBlack.jfif");
 	Resources::GetInstance()->AddTexture("Images/Textures/wall.jpg");
 	Resources::GetInstance()->AddTexture("Images/Textures/wall2.bmp");
-	Resources::GetInstance()->AddTexture("Images/Textures/steel.jpg");
-
-		/*Resources::GetInstance()->AddShader(std::make_shared<ShaderProgram>(ASSET_PATH + "Shaders/Phong.frag", 
-		ASSET_PATH + "Shaders/Phong.vert"), 
-		"simple"*/
+	Resources::GetInstance()->AddTexture("Images/Textures/steel.jpg");		
 
 		Resources::GetInstance()->AddShader(std::make_shared<ShaderProgram>(ASSET_PATH + "Shaders/basic_VERT.glsl",
 		ASSET_PATH + "Shaders/basic_FRAG.glsl"),
 		"simple"
+
+			/*Resources::GetInstance()->AddShader(std::make_shared<ShaderProgram>(ASSET_PATH + "Shaders/Phong.frag",
+		ASSET_PATH + "Shaders/Phong.vert"),
+		"simple"*/
 	);
 	
 	
-	//Object 2 Player--------------------------------------------------------------------
+	//Object  Player--------------------------------------------------------------------
 	m_entities.push_back(b);
 	b->AddComponent(
 		new MeshRenderer(
@@ -895,7 +892,75 @@ void Application::GameInit()
 		wallRight14->GetTransform()->SetScale(glm::vec3(1.f, 1.0f, 1.f));
 
 		//Lives ----------------------------------------------------------------------
-		Test();
+		m_entities.push_back(life);
+		life->AddComponent(
+			new MeshRenderer(
+				Resources::GetInstance()->GetModel("Models/Dachshund.obj"),
+				Resources::GetInstance()->GetShader("simple"),
+				Resources::GetInstance()->GetTexture("Images/Textures/bone.jpg"))
+		);
+		MeshRenderer* m_life = life->GetComponent<MeshRenderer>();
+		life->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(-6.f, 0.f, -6.f));
+		life->AddComponent<RigidBody>();
+		life->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(0.f, 0.f, 0.f)));
+		life->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
+		life->GetTransform()->SetScale(glm::vec3(0.05f, 0.05f, 0.05f));
+
+		m_entities.push_back(life2);
+		life2->AddComponent(
+			new MeshRenderer(
+				Resources::GetInstance()->GetModel("Models/Dachshund.obj"),
+				Resources::GetInstance()->GetShader("simple"),
+				Resources::GetInstance()->GetTexture("Images/Textures/bone.jpg"))
+		);
+		MeshRenderer* m_life2 = life2->GetComponent<MeshRenderer>();
+		life2->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(-3.f, 0.f, -6.f));
+		life2->AddComponent<RigidBody>();
+		life2->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(0.f, 0.f, 0.f)));
+		life2->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
+		life2->GetTransform()->SetScale(glm::vec3(0.05f, 0.05f, 0.05f));
+
+		m_entities.push_back(life3);
+		life3->AddComponent(
+			new MeshRenderer(
+				Resources::GetInstance()->GetModel("Models/Dachshund.obj"),
+				Resources::GetInstance()->GetShader("simple"),
+				Resources::GetInstance()->GetTexture("Images/Textures/bone.jpg"))
+		);
+		MeshRenderer* m_life3 = life3->GetComponent<MeshRenderer>();
+		life3->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(0.f, 0.f, -6.f));
+		life3->AddComponent<RigidBody>();
+		life3->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(0.f, 0.f, 0.f)));
+		life3->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
+		life3->GetTransform()->SetScale(glm::vec3(0.05f, 0.05f, 0.05f));
+
+		m_entities.push_back(life4);
+		life4->AddComponent(
+			new MeshRenderer(
+				Resources::GetInstance()->GetModel("Models/Dachshund.obj"),
+				Resources::GetInstance()->GetShader("simple"),
+				Resources::GetInstance()->GetTexture("Images/Textures/bone.jpg"))
+		);
+		MeshRenderer* m_life4 = life4->GetComponent<MeshRenderer>();
+		life4->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(3.f, 0.f, -6.f));
+		life4->AddComponent<RigidBody>();
+		life4->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(0.f, 0.f, 0.f)));
+		life4->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
+		life4->GetTransform()->SetScale(glm::vec3(0.05f, 0.05f, 0.05f));
+
+		m_entities.push_back(life5);
+		life5->AddComponent(
+			new MeshRenderer(
+				Resources::GetInstance()->GetModel("Models/Dachshund.obj"),
+				Resources::GetInstance()->GetShader("simple"),
+				Resources::GetInstance()->GetTexture("Images/Textures/bone.jpg"))
+		);
+		MeshRenderer* m_life5 = life5->GetComponent<MeshRenderer>();
+		life5->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(6.f, 0.f, -6.f));
+		life5->AddComponent<RigidBody>();
+		life5->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(0.f, 0.f, 0.f)));
+		life5->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
+		life5->GetTransform()->SetScale(glm::vec3(0.05f, 0.05f, 0.05f));
 
 	Entity* c = new Entity();
 	c = new Entity();
@@ -919,8 +984,7 @@ void Application::Loop()
 		//Collision---------------------------------------------------------------------
 		//Player and bone - Reset bone position and increase score
 		if (Physics::GetInstance()->Collision3D(b->GetComponent<RigidBody>()->Get(), 0, 0, bone->GetComponent<RigidBody>()->Get(), 1, 1) == true)
-		{
-			std::cout << "Bone Col, score = " << score << std::endl;
+		{			
 			theSoundMgr->getSnd("woof")->play(0);
 			CreateRandomNumber();
 			bone->GetTransform()->SetPosition(glm::vec3(m_randomNumber, 10.f, 70.f));;
@@ -928,8 +992,7 @@ void Application::Loop()
 		}
 		//Player and bone2 - Reset bone position and increase score
 		if (Physics::GetInstance()->Collision3D(b->GetComponent<RigidBody>()->Get(), 0, 0, bone2->GetComponent<RigidBody>()->Get(), 1, 1) == true)
-		{
-			std::cout << "Bone Col, score = " << score << std::endl;
+		{			
 			theSoundMgr->getSnd("woof")->play(0);
 			CreateRandomNumber();
 			bone2->GetTransform()->SetPosition(glm::vec3(m_randomNumber, 10.f, 70.f));
@@ -937,8 +1000,7 @@ void Application::Loop()
 		}
 		//Player and bone3 - Reset bone position and increase score
 		if (Physics::GetInstance()->Collision3D(b->GetComponent<RigidBody>()->Get(), 0, 0, bone3->GetComponent<RigidBody>()->Get(), 1, 1) == true)
-		{
-			std::cout << "Bone Col, score = " << score << std::endl;
+		{			
 			theSoundMgr->getSnd("woof")->play(0);
 			CreateRandomNumber();
 			bone3->GetTransform()->SetPosition(glm::vec3(m_randomNumber, 10.f, 70.f));
@@ -1184,17 +1246,7 @@ void Application::Loop()
 				m_appState = AppState::QUITTING;
 				break;
 			case SDL_KEYDOWN:
-				switch (event.key.keysym.sym) {					
-				case SDLK_w:					
-					break;
-				case SDLK_q:
-					m_mainCamera->SetProjPersp(45.f, (float)WINDOW_W / (float)WINDOW_H, 0.1f, 1000.f);
-					theSoundMgr->getSnd("theme")->resumeMusic();
-					break;
-				case SDLK_e:
-					m_mainCamera->SetProjOrtho(-500, (float)WINDOW_W, 0, (float)WINDOW_H, 0.1f, 1000.f);
-					theSoundMgr->getSnd("theme")->pauseMusic();
-					break;				
+				switch (event.key.keysym.sym) {														
 				case SDLK_o:
 					b->AddComponent(cc);
 					cc->Start2();
@@ -1405,9 +1457,7 @@ void Application::Loop()
 		}
 		if (!armor)
 		{
-			shield->GetTransform()->SetPosition(glm::vec3(0.f, -200.f, 0.f));
-			shield2->GetTransform()->SetPosition(glm::vec3(0.f, -200.f, 0.f));
-			shield3->GetTransform()->SetPosition(glm::vec3(0.f, -200.f, 0.f));
+			shield->GetTransform()->SetPosition(glm::vec3(0.f, -200.f, 0.f));			
 		}
 
 		if (lives <= 0)
@@ -1505,75 +1555,7 @@ void Application::spawnSomethingSpider()
 	spider->GetTransform()->SetRotation(glm::quat(1.f, 0.f, -1.f, 0.f));
 }
 
-void Application::Test()
+void Application::Lives()
 {
-	m_entities.push_back(life);
-	life->AddComponent(
-		new MeshRenderer(
-			Resources::GetInstance()->GetModel("Models/Dachshund.obj"),
-			Resources::GetInstance()->GetShader("simple"),
-			Resources::GetInstance()->GetTexture("Images/Textures/bone.jpg"))
-	);
-	MeshRenderer* m_life = life->GetComponent<MeshRenderer>();	
-	life->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(-6.f, 0.f, -6.f));	
-	life->AddComponent<RigidBody>();
-	life->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(0.f, 0.f, 0.f)));
-	life->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
-	life->GetTransform()->SetScale(glm::vec3(0.05f, 0.05f, 0.05f));
-		
-	m_entities.push_back(life2);
-	life2->AddComponent(
-		new MeshRenderer(
-			Resources::GetInstance()->GetModel("Models/Dachshund.obj"),
-			Resources::GetInstance()->GetShader("simple"),
-			Resources::GetInstance()->GetTexture("Images/Textures/bone.jpg"))
-	);
-	MeshRenderer* m_life2 = life2->GetComponent<MeshRenderer>();	
-	life2->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(-3.f, 0.f, -6.f));	
-	life2->AddComponent<RigidBody>();
-	life2->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(0.f, 0.f, 0.f)));
-	life2->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
-	life2->GetTransform()->SetScale(glm::vec3(0.05f, 0.05f, 0.05f));
-
-	m_entities.push_back(life3);
-	life3->AddComponent(
-		new MeshRenderer(
-			Resources::GetInstance()->GetModel("Models/Dachshund.obj"),
-			Resources::GetInstance()->GetShader("simple"),
-			Resources::GetInstance()->GetTexture("Images/Textures/bone.jpg"))
-	);
-	MeshRenderer* m_life3 = life3->GetComponent<MeshRenderer>();	
-	life3->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(0.f, 0.f, -6.f));	
-	life3->AddComponent<RigidBody>();
-	life3->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(0.f, 0.f, 0.f)));
-	life3->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
-	life3->GetTransform()->SetScale(glm::vec3(0.05f, 0.05f, 0.05f));
-
-	m_entities.push_back(life4);
-	life4->AddComponent(
-		new MeshRenderer(
-			Resources::GetInstance()->GetModel("Models/Dachshund.obj"),
-			Resources::GetInstance()->GetShader("simple"),
-			Resources::GetInstance()->GetTexture("Images/Textures/bone.jpg"))
-	);
-	MeshRenderer* m_life4 = life4->GetComponent<MeshRenderer>();	
-	life4->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(3.f, 0.f, -6.f));	
-	life4->AddComponent<RigidBody>();
-	life4->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(0.f, 0.f, 0.f)));
-	life4->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
-	life4->GetTransform()->SetScale(glm::vec3(0.05f, 0.05f, 0.05f));
-
-	m_entities.push_back(life5);
-	life5->AddComponent(
-		new MeshRenderer(
-			Resources::GetInstance()->GetModel("Models/Dachshund.obj"),
-			Resources::GetInstance()->GetShader("simple"),
-			Resources::GetInstance()->GetTexture("Images/Textures/bone.jpg"))
-	);
-	MeshRenderer* m_life5 = life5->GetComponent<MeshRenderer>();	
-	life5->GetTransform()->SetPosition(glm::vec3(b->GetTransform()->GetPosition()) + glm::vec3(6.f, 0.f, -6.f));	
-	life5->AddComponent<RigidBody>();
-	life5->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(0.f, 0.f, 0.f)));
-	life5->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
-	life5->GetTransform()->SetScale(glm::vec3(0.05f, 0.05f, 0.05f));
+	
 };

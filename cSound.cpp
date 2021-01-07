@@ -67,11 +67,12 @@ void cSound::play(int loop)
 	}
 }
 
+//Pauses the music
 void cSound::pauseMusic()
 {
 	Mix_PauseMusic();
 }
-
+//Resume playing the music
 void cSound::resumeMusic()
 {
 	Mix_ResumeMusic();

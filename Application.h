@@ -32,9 +32,7 @@ private:
 	bool grounded = false;
 	float m_randomNumber;
 	int score = 0;
-	int lives = 4;
-	int nSecs = 10;
-	float bonePos = 0.f;
+	int lives = 4;	
 	bool armor = false;
 	int timer;
 	bool gameActive = false;
@@ -43,7 +41,6 @@ private:
 	int currentCamera = 1;
 	SDL_Renderer* renderTarget = nullptr;
 	SDL_Renderer* renderTarget1 = nullptr;
-
 	
 	//Game Sounds
 	std::vector<std::string> soundList;
@@ -62,8 +59,7 @@ private:
 	void spawnSomethingBone();
 	void spawnSomethingSpider();
 	void CreateRandomNumber();
-	void Delay(int nSecs);
-
+	
 public:
 	//public functions
 	~Application();
@@ -76,6 +72,6 @@ public:
 	inline Camera* GetCamera() { return m_mainCamera; }
 	void SetCamera(Camera* camera);
 	void GameInit();	
-	void Test();
+	void Lives();
 };
 

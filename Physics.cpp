@@ -38,6 +38,7 @@ void Physics::Update(float deltaTime)
 	}
 }
 
+//Check to see if two objects are colliding by comparing their x, y, z positions to see they overlap
 bool Physics::Collision3D(btCollisionObject* obj1, int id1, int index1, btCollisionObject* obj2, int id2, int index2)
 {
 	if ((obj1->getBroadphaseHandle()->m_aabbMax.x() < obj2->getBroadphaseHandle()->m_aabbMin.x()) || (obj1->getBroadphaseHandle()->m_aabbMin.x() > obj2->getBroadphaseHandle()->m_aabbMax.x()))
